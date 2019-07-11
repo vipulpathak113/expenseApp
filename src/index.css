@@ -1,0 +1,180 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: white;
+  font-size: 12px
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+
+.modalheader{
+  padding-top: 7px;
+    border-bottom-width: 0px;
+    padding-bottom: 0px;
+}
+
+.comment {
+  padding-right: 28px;
+}
+
+.perEx {
+  margin-left: 20px;
+    margin-top: 30px;
+}
+
+.rowContent th center{
+  padding-right: 30px;
+    padding-left: 29px;
+}
+
+.rowContent{
+  background:grey
+}
+
+.date{
+  margin-right: 48px
+}
+
+.desc{
+  padding-right: 7px
+}
+
+.inputDesc{
+  margin-top: 9px;
+   width : 280px;
+    margin-left: 12px;
+    border-left-width: 2px;
+}
+
+.amount{
+  margin-right: 31px;
+}
+
+.date{
+  margin-right: 55px
+}
+
+.expdesc{
+  padding-right: 7px;
+}
+
+.paid{
+  margin-right: 17px;
+}
+
+.expamount{
+  margin-right: 32px;
+}
+
+.expWho{
+  margin-right: 12px;
+}
+
+.divPaid{
+  margin-top: 5px
+}
+
+.paidradio{
+  padding-right: 15px
+}
+
+.datePanel{
+  width: 75px;
+}
+
+.dateexp{
+  padding-right: 25px;
+  padding-left: 25px;
+}
+
+.created{
+  margin-bottom: 7px;
+  margin-left: 10px;
+}
+
+.selectCheckbox{
+  margin-right: 20px;
+}
+
+.selectCheckboxDel{
+  margin-right: 20px;
+  margin-left: 14px;
+}
+
+.sheetName{
+  margin-top: 10px;
+  
+}
+.sheetName1{
+ font-size: 18px;
+ color:darkblue
+  
+}
+
+
+.staticComp{
+  border: 1px solid;
+  height: 110px;
+  width: 600px;
+  border-radius: 20px
+}
+
+.sheetborder{
+  border: 1px solid;
+  height: 150px;
+  width: 600px;
+  border-radius: 20px
+}
+
+img{
+  cursor: pointer;
+}
+
+.registr{
+  border: 1px solid darkgrey;
+  color: midnightblue;
+  font-size: 9px;
+  margin-left: 23px;
+}
+
+.staticComp1{
+  border: 1px solid;
+  height: 110px;
+  width: 695px;
+}
+
+a{
+  cursor: pointer;
+}
+
+.edit{
+ font-size:12px;
+ color: blue !important;
+ 
+}
+
+.pay{
+  font-size:30px;
+  color: red;
+  font-family:Arial, Helvetica, sans-serif
+}
+
+.debt{
+  font-size: 30px;
+  color:green;
+  font-style: oblique;
+  font-weight: 600;
+}
+
+.error{
+  margin-left: 86px;
+  color:red;
+}
