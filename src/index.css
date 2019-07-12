@@ -178,3 +178,8 @@ a{
   margin-left: 86px;
   color:red;
 }
+
+.bor{
+  border-right-width: 0px;
+    border-left-width: 0px;
+}

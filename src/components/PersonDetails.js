@@ -37,7 +37,7 @@ class PersonDetails extends Component {
             sheetId: '',
             isSelected: true,
             expenses:'',
-            items1: [],
+            chckall: true,
         }
     }
 
@@ -59,9 +59,9 @@ class PersonDetails extends Component {
     }
 
     onToggleAll(ele) {
-        const items= this.state.items
+        var items= this.state.items
         const persons= this.state.persons
-        console.log(persons)
+        if(persons)
         var checkboxes = document.getElementsByTagName('input');
         if (ele.target.checked) {
             for (var i = 0; i < checkboxes.length; i++) {
@@ -70,10 +70,12 @@ class PersonDetails extends Component {
                 }
             }
             items.push(persons.map(item=>item.id))
+            items=items[0]
                 this.setState({
                     items:items,isSelected: false
                 })
                 console.log(this.state.items)
+
         } else {
             for (var i = 0; i < checkboxes.length; i++) {
                 if (checkboxes[i].type == 'checkbox') {
@@ -157,7 +159,7 @@ class PersonDetails extends Component {
         this.setState({
             showModal: false, name: '',
             nickname: '',
-            comment: '',
+            comment: ''
 
         });
     }
@@ -249,9 +251,10 @@ class PersonDetails extends Component {
     render() {
         this.interval = setInterval(() => {
             if (this.state.persons && this.state.persons.length >= 2) {
-                if (this.state.isExpenseDisabled) {
+                if (this.state.isExpenseDisabled && this.state.chckall) {
                     this.setState({
-                        isExpenseDisabled: false
+                        isExpenseDisabled: false,
+                        chckall: false
                     });
                 }
             }
@@ -261,6 +264,8 @@ class PersonDetails extends Component {
                 })
             }
         }, 1000);
+
+        
 
         this.interval1 = setInterval(() => {
             if (this.state.expenses && this.state.expenses.length >= 1) {
@@ -288,7 +293,7 @@ class PersonDetails extends Component {
                     <Tab eventKey="group" title="Create Group" ><table border="1">
                         <thead>
                             <tr className="rowContent">
-                                <th><center><input type="checkbox" value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" />Action</center></th>
+                                <th><center><input type="checkbox" disabled={this.state.chckall} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" />Action</center></th>
                                 <th><center>Person Name</center></th>
                                 <th><center>Display Name</center></th>
                                 <th><center>Description or Comment</center></th>
@@ -298,7 +303,7 @@ class PersonDetails extends Component {
 
                         </tbody>
 
-    {persons ? persons.map((item, id) => {
+    {persons? persons.map((item, id) => {
         return (
             <tr key={item.id}>
                 <td><center>
@@ -312,10 +317,12 @@ class PersonDetails extends Component {
             </tr>
         )
 
-                }) : <div className="staticComp1">
-                        <div style={{ 'margin-top': '15px' }}>>><b>Please enter the list of persons who are sharing expenses: Click Add Person to get started.
-<div>Once you have entered at least 2 persons, click Enter Expenses to start entering expenses.</div></b></div>
-                            </div>}
+                })
+                : <tr style={{height:'127px'}}>
+                <td className="bor">Please enter the list of persons who are sharing expenses:</td> <td className="bor">Click Add Person to get started.</td>
+                <td className="bor">Once you have entered at least 2 persons,</td><td className="bor"> click Enter Expenses to start entering expenses.</td>
+                </tr>
+}
                     </table>
                         <Button
                             variant="primary"

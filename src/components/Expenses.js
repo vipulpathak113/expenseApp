@@ -35,7 +35,8 @@ class Expense extends Component {
         items: [],
         isSelected: true,
         sheetId: '',
-        payment:''
+        payment:'',
+        chckall:true
     }
 }
 
@@ -225,7 +226,7 @@ class Expense extends Component {
         console.log(e.target.value)
         // var expenses= this.state.expenses
         // console.log(expenses)
-        if (e.target.value !== "all") {
+        if (e.target.value !== "all" && newExpenses) {
             let selectedExpenses = newExpenses.filter(item => item[2] === e.target.value);
             this.setState({
                 expenses: selectedExpenses
@@ -235,6 +236,40 @@ class Expense extends Component {
                 expenses: newExpenses
             })
         }
+    }
+
+    onToggleAll(ele) {
+        var items= this.state.items
+        const expenses= this.state.expenses
+        console.log(expenses)
+        if(expenses)
+        var checkboxes = document.getElementsByTagName('input');
+        if (ele.target.checked) {
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type == 'checkbox') {
+                    checkboxes[i].checked = true;
+                }
+            }
+            items.push(expenses.map(item=>item[5]))
+            items=items[0]
+                this.setState({
+                    items:items,isSelected: false
+                })
+                console.log(this.state.items)
+
+        } else {
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type == 'checkbox') {
+                    checkboxes[i].checked = false;
+                }
+            }
+            items.splice(expenses.map(item=>item[5]), 1)
+            this.setState({
+                items:items,isSelected: true
+            })
+            console.log(this.state.items)
+        }
+       
     }
 
 
@@ -270,6 +305,21 @@ class Expense extends Component {
             }
         }, 1000);
 
+        this.interval = setInterval(() => {
+            if (this.state.expenses.length >= 2) {
+                if (this.state.chckall) {
+                    this.setState({
+                        chckall: false
+                    });
+                }
+            }
+            else {
+                this.setState({
+
+                })
+            }
+        }, 1000);
+
         const field = this.state.expenses;
         return (
             <div>
@@ -292,7 +342,7 @@ class Expense extends Component {
                 <table border="1">
                     <thead>
                         <tr className="rowContent">
-                            <th><center>Action</center></th>
+                            <th><center><input type="checkbox" disabled={this.state.chckall} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" />Action</center></th>
                             <th><center>Date</center></th>
                             <th><center>Description</center></th>
                             <th><center>Who Paid?</center></th>
@@ -300,7 +350,6 @@ class Expense extends Component {
                             <th><center>For Whom</center></th>
                         </tr>
                         {field && field.map((item, id) => {
-                            console.log(item)
                             return (
                                 <tr key={item.id}>
                                     <td>
