@@ -36,7 +36,8 @@ class PersonDetails extends Component {
             intervalId: '',
             sheetId: '',
             isSelected: true,
-            expenses:''
+            expenses:'',
+            items1: [],
         }
     }
 
@@ -57,14 +58,35 @@ class PersonDetails extends Component {
 
     }
 
-    onToggleAll(e) {
-      console.log(this.state.persons.length)
-
-      for(var i=0;i<this.state.persons.length;i++){
-
-        console.log(e)
-    }
-
+    onToggleAll(ele) {
+        const items= this.state.items
+        const persons= this.state.persons
+        console.log(persons)
+        var checkboxes = document.getElementsByTagName('input');
+        if (ele.target.checked) {
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type == 'checkbox') {
+                    checkboxes[i].checked = true;
+                }
+            }
+            items.push(persons.map(item=>item.id))
+                this.setState({
+                    items:items,isSelected: false
+                })
+                console.log(this.state.items)
+        } else {
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type == 'checkbox') {
+                    checkboxes[i].checked = false;
+                }
+            }
+            items.splice(persons.map(item=>item.id), 1)
+            this.setState({
+                items:items,isSelected: true
+            })
+            console.log(this.state.items)
+        }
+       
     }
 
     handleSelect(value) {
@@ -75,6 +97,7 @@ class PersonDetails extends Component {
 
     deleteSelected() {
         alert("Are you sure you want to delete this person");
+        if(this.state.expenses){
          var items= this.state.items
        items&& items.map(pol=>{
         var pname= this.state.persons.filter(item=>item.id==pol)[0].nickname
@@ -94,6 +117,9 @@ class PersonDetails extends Component {
             this.setState({
                 isExpenseDisabled: true
             });
+        }}
+        else{
+            this.props.deletePerson({ items: this.state.items });
         }
     }
 
