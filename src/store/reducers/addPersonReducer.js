@@ -1,7 +1,9 @@
 const initState = {
     personSuccess: null,
     personError: null,
-    data: ''
+    data: '',
+    data1:'',
+    data2:''
 }
 
 const personReducer = (state = initState, action) => {
@@ -23,6 +25,10 @@ const personReducer = (state = initState, action) => {
                 personError: action.data,
                 personSuccess: null
             };
+        case 'FETCH_PERSON':
+            console.log("fetched successfully", action.payload)
+            return {...state,
+                data1: [...action.payload]}
 
         case 'UPDATE_PERSON':
             console.log("updated successfully", action.data)
@@ -34,7 +40,7 @@ const personReducer = (state = initState, action) => {
 
             };
         case 'UPDATE_PERSON_ERROR':
-            console.log("update error", action.err)
+            console.log("update error", action.data)
             return {
 
                 personError: 'Person not updated',
@@ -47,11 +53,11 @@ const personReducer = (state = initState, action) => {
                 ...state,
                 personSuccess: 'Person deleted successfully',
                 personError: null,
-                data: action.data
+                data2: action.data
 
             };
         case 'DELETE_PERSON_ERROR':
-            console.log("deleted error", action.err)
+            console.log("deleted error", action.data)
             return {
 
                 personError: 'Person not deleted',

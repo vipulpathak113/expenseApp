@@ -55,10 +55,10 @@ export const deleteExpense = (expense) => {
                 ).then(response => {
                     console.log(response)
                     if (response.status === 204) {
-                        dispatch({ type: 'DELETE_PERSON', data: response.data })
+                        dispatch({ type: 'DELETE_EXPENSE', data: response.data })
                     }
                 }).catch((err) => {
-                    dispatch({ type: 'DELETE_PERSON_ERROR', data: err })
+                    dispatch({ type: 'DELETE_EXPENSE_ERROR', data: err })
                 })
             }
             )
