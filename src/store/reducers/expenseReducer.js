@@ -3,7 +3,8 @@
 const initState = {
     expenseSuccess: null,
     expenseError: null,
-    data: ''
+    data: '',
+    data1:''
 }
 
 const expenseReducer = (state = initState, action) => {
@@ -15,16 +16,21 @@ const expenseReducer = (state = initState, action) => {
                 ...state,
                 expenseSuccess: 'New expense Created successfully',
                 expenseError: null,
-                data: action.data
+                data: [...state.data,action.data]
 
             };
         case 'CREATE_EXPENSE_ERROR':
             console.log("created error", action.err)
             return {
-
                 expenseError: 'expense not created',
                 expenseSuccess: null
             };
+
+        case 'FETCH_EXPENSES':
+            console.log("fetched successfully", action.payload)
+            return {...state,
+                data1: [...action.payload]
+            }       
 
         case 'UPDATE_EXPENSE':
             console.log("updated successfully", action.data)

@@ -35,6 +35,11 @@ export const updateSheet = (sheet) => {
             console.log(response)
             if (response.status === 200) {
                 dispatch({ type: 'UPDATE_SHEET', data: response.data })
+                axios.get(`http://127.0.0.1:8000/expense/sheet/?pk=${sheet.sid}`)
+        .then(response => {
+            console.log(response)
+                dispatch({ type: 'FETCH_SHEETS', payload: response.data })
+        })
             }
         }).catch((err) => {
             dispatch({ type: 'UPDATE_SHEET_ERROR', data: err })
@@ -45,3 +50,27 @@ export const updateSheet = (sheet) => {
 
 }
 
+export const getPayments = (payment) => {
+    console.log(payment)
+    return (dispatch) => {
+        axios.get(`http://127.0.0.1:8000/expense/payment/?pk=${payment.id}`)
+        .then(response => {
+            console.log(response)
+                dispatch({ type: 'FETCH_PAYMENTS', payload: response.data })
+        })
+    }
+
+}
+
+
+export const getSheets = (sheet) => {
+    console.log(sheet)
+    return (dispatch) => {
+        axios.get(`http://127.0.0.1:8000/expense/sheet/?pk=${sheet.id}`)
+        .then(response => {
+            console.log(response)
+                dispatch({ type: 'FETCH_SHEETS', payload: response.data })
+        })
+    }
+
+}

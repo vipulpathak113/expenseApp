@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import { createExpense } from '../store/actions/expenseAction'
 import { updateExpense } from '../store/actions/expenseAction'
 import { deleteExpense } from '../store/actions/expenseAction'
+import {getAllExpenses} from '../store/actions/expenseAction'
 import { connect } from 'react-redux'
 import axios from 'axios'
 
@@ -150,9 +151,9 @@ class Expense extends Component {
         console.log(this.state.paidTo)
         alert("Are you sure you want to delete this expense");
 
-        this.props.deleteExpense({ items: this.state.items,expenses:this.state.expenses });
-        if (this.state.expenses && this.state.expenses.length < 1) {
-            console.log(this.state.expenses.length)
+        this.props.deleteExpense({ items: this.state.items,expenses:this.props.expenses,sheetId: this.state.sheetId });
+        if (this.props.expenses && this.props.expenses.length < 1) {
+            console.log(this.props.expenses.length)
             console.log(this.state.isPayment)
             this.setState({
                 isPayment: true
@@ -163,8 +164,8 @@ class Expense extends Component {
 
     editMode(index, event) {
         console.log('item index = ', index)
-        console.log(this.state.expenses)
-        var data = this.state.expenses[index]
+        console.log(this.props.expenses)
+        var data = this.props.expenses[index]
         // debugger;
         console.log(data)
         this.setState({
@@ -204,14 +205,14 @@ class Expense extends Component {
     }
 
     onToggleEdit(e) {
-        console.log(this.state.expenses)
+        console.log(this.props.expenses)
 
         const items = this.state.items
         let index
         if (e.target.checked) {
             console.log(e.target.value)
             this.setState({ isSelected: false })
-            items.push(this.state.expenses[e.target.value][5])
+            items.push(this.props.expenses[e.target.value][5])
         } else {
             this.setState({ isSelected: true })
             index = items.indexOf(+e.target.value)
@@ -224,7 +225,7 @@ class Expense extends Component {
 
     handleSelection(e){
         console.log(e.target.value)
-        // var expenses= this.state.expenses
+        // var expenses= this.props.expenses
         // console.log(expenses)
         if (e.target.value !== "all" && newExpenses) {
             let selectedExpenses = newExpenses.filter(item => item[2] === e.target.value);
@@ -240,7 +241,7 @@ class Expense extends Component {
 
     onToggleAll(ele) {
         var items= this.state.items
-        const expenses= this.state.expenses
+        const expenses= this.props.expenses
         console.log(expenses)
         if(expenses)
         var checkboxes = document.getElementsByTagName('input');
@@ -279,19 +280,12 @@ class Expense extends Component {
         this.setState({
             sheetId: id
         })
-        axios.get(`http://127.0.0.1:8000/expense/?pk=${id}`)
-            .then(res => {
-                console.log(res)
-                if (res.status === 200) {
-                    newExpenses = res.data;
-                    this.setState({ expenses: res.data });
-                }
-            })
+        this.props.getAllExpenses({id:id})
     }
     render() {
 
         this.interval = setInterval(() => {
-            if (this.state.expenses && this.state.expenses.length >= 1) {
+            if (this.props.expenses && this.props.expenses.length >= 1) {
                 if (this.state.isPayment) {
                     this.setState({
                         isPayment: false
@@ -306,7 +300,7 @@ class Expense extends Component {
         }, 1000);
 
         this.interval = setInterval(() => {
-            if (this.state.expenses.length >= 2) {
+            if (this.props.expenses.length >= 2) {
                 if (this.state.chckall) {
                     this.setState({
                         chckall: false
@@ -320,7 +314,7 @@ class Expense extends Component {
             }
         }, 1000);
 
-        const field = this.state.expenses;
+        const field = this.props.expenses;
         return (
             <div>
             
@@ -521,6 +515,7 @@ class Expense extends Component {
 const mapStateToProps = (state, ownProps) => {
     console.log(state)
     return {
+        expenses: state.expense.data1
     }
 }
 
@@ -529,6 +524,7 @@ const mapDispatchToProps = (dispatch) => {
         createExpense: (expense) => dispatch(createExpense(expense)),
         updateExpense: (expense) => dispatch(updateExpense(expense)),
         deleteExpense: (expense) => dispatch(deleteExpense(expense)),
+        getAllExpenses: (expense)=>dispatch (getAllExpenses(expense))
     }
 }
 

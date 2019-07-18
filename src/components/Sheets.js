@@ -3,6 +3,8 @@ import axios from 'axios'
 import moment from 'moment'
 import { Button, Modal } from 'react-bootstrap';
 import { updateSheet } from '../store/actions/sheetAction'
+import {getPayments} from '../store/actions/sheetAction'
+import {getSheets} from '../store/actions/sheetAction'
 import { connect } from 'react-redux'
 
 class Sheets extends Component{
@@ -22,27 +24,13 @@ componentDidMount(){
     this.setState({
         sheetId: id
     })
-    axios.get(`http://127.0.0.1:8000/expense/sheet/?pk=${id}`)
-    .then(res => {
-        console.log(res)
-        if (res.status === 200) {
-            const sheets = res.data[0];
-            this.setState({ sheets });
-        }
-    }).catch(err => console.log(err.message));
-
-
-    axios.get(`http://127.0.0.1:8000/expense/payment/?pk=${id}`)
-    .then(res => {
-        console.log(res)
-        if (res.status === 200) {
-            this.setState({ payment: res.data });
-        }
-    }).catch(err => console.log(err.message));
+       this.props.getSheets({id:id})
+       this.props.getPayments({id:id})
 }
 
 editSheet() {   
-    var data = this.state.sheets;
+    var data = this.props.sheets[0];
+    console.log(data)
     this.setState({
         editModal: true,
         display_name: data.display_name,
@@ -76,9 +64,9 @@ saveEdit(e) {
 
     render(){
        
-        const sheets = this.state.sheets
+        const sheets = this.props.sheets[0]
         const persons= this.props.persons
-        const payment= this.state.payment
+        const payment= this.props.payment
         return(
             <div>
                     <div className="created"><b className="sheetName1">{sheets ? sheets.display_name === '' ? "New Expense Sheet" : sheets.display_name : ""}</b>
@@ -114,10 +102,20 @@ saveEdit(e) {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = (state, ownProps) => {
+    console.log(state)
     return {
-        updateSheet: (sheet) => dispatch(updateSheet(sheet))
+        payment: state.sheet.data1,
+        sheets:  state.sheet.sheet
     }
 }
 
-export default connect(null,mapDispatchToProps)(Sheets)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        updateSheet: (sheet) => dispatch(updateSheet(sheet)),
+        getPayments:(payment)=>dispatch(getPayments(payment)),
+        getSheets: (sheet)=>dispatch(getSheets(sheet))
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Sheets)

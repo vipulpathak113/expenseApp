@@ -15,7 +15,7 @@ const personReducer = (state = initState, action) => {
                 ...state,
                 personSuccess: 'New Person Created successfully',
                 personError: null,
-                data: action.data
+                data: [...state.data,action.data]
 
             };
         case 'CREATE_PERSON_ERROR':

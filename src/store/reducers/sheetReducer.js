@@ -3,7 +3,9 @@
 const initState = {
     sheetSuccess: null,
     sheetError: null,
-    data: ''
+    data: '',
+    data1:'',
+    sheet:''
 }
 
 const sheetReducer = (state = initState, action) => {
@@ -25,6 +27,18 @@ const sheetReducer = (state = initState, action) => {
                 sheetError: 'Sheet not created',
                 sheetSuccess: null
             };
+       
+        case 'FETCH_PAYMENTS':
+            console.log("fetched successfully", action.payload)
+            return {...state,
+                data1: action.payload}
+
+
+        case 'FETCH_SHEETS':
+            console.log("fetched successfully", action.payload)
+            return {...state,
+                sheet: action.payload}            
+
 
         case 'UPDATE_SHEET':
             console.log("updated successfully", action.data)

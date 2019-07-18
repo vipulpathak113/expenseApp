@@ -1,5 +1,19 @@
 import axios from 'axios'
 
+
+
+export const getAllExpenses = (expense) => {
+    console.log(expense)
+    return (dispatch) => {
+        axios.get(`http://127.0.0.1:8000/expense/?pk=${expense.id}`)
+        .then(response => {
+            console.log(response)
+                dispatch({ type: 'FETCH_EXPENSES', payload: response.data })
+        })
+    }
+
+}
+
 export const createExpense = (expense) => {
     console.log(expense)
     return (dispatch, getState) => {
@@ -7,7 +21,21 @@ export const createExpense = (expense) => {
             expense
         ).then(response => {
             console.log(response)
+            if (response.status === 201) {
                 dispatch({ type: 'CREATE_EXPENSE', data: response.data })
+                axios.get(`http://127.0.0.1:8000/expense/?pk=${expense.sheetId}`)
+        .then(response => {
+            console.log(response)
+                dispatch({ type: 'FETCH_EXPENSES', payload: response.data })
+        })
+
+        axios.get(`http://127.0.0.1:8000/expense/payment/?pk=${expense.sheetId}`)
+        .then(response => {
+            console.log(response)
+                dispatch({ type: 'FETCH_PAYMENTS', payload: response.data })
+        })
+
+            }
         }).catch((err) => {
             dispatch({ type: 'CREATE_EXPENSE_ERROR', data: err })
         })
@@ -33,6 +61,11 @@ export const updateExpense = (expense) => {
             console.log(response)
             if (response.status === 200) {
                 dispatch({ type: 'UPDATE_EXPENSE', data: response.data })
+                axios.get(`http://127.0.0.1:8000/expense/?pk=${expense.sheetId}`)
+        .then(response => {
+            console.log(response)
+                dispatch({ type: 'FETCH_EXPENSES', payload: response.data })
+        })
             }
         }).catch((err) => {
             dispatch({ type: 'UPDATE_EXPENSE_ERROR', data: err })
@@ -56,6 +89,18 @@ export const deleteExpense = (expense) => {
                     console.log(response)
                     if (response.status === 204) {
                         dispatch({ type: 'DELETE_EXPENSE', data: response.data })
+                        axios.get(`http://127.0.0.1:8000/expense/?pk=${expense.sheetId}`)
+        .then(response => {
+            console.log(response)
+                dispatch({ type: 'FETCH_EXPENSES', payload: response.data })
+        })
+
+        axios.get(`http://127.0.0.1:8000/expense/payment/?pk=${expense.sheetId}`)
+        .then(response => {
+            console.log(response)
+                dispatch({ type: 'FETCH_PAYMENTS', payload: response.data })
+        })
+
                     }
                 }).catch((err) => {
                     dispatch({ type: 'DELETE_EXPENSE_ERROR', data: err })

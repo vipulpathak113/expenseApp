@@ -11,6 +11,7 @@ import Expense from './Expenses'
 import axios from 'axios'
 import Sheets from './Sheets'
 import Compute from './Compute'
+import store from '../store/store';
 
 
 
@@ -49,7 +50,7 @@ class PersonDetails extends Component {
         let index
         if (e.target.checked) {
             this.setState({ isSelected: false })
-            items.push(this.props.persons[e.target.value].id)
+            items.push(this.props.persons1[e.target.value].id)
         } else {
             this.setState({ isSelected: true })
             index = items.indexOf(+e.target.value)
@@ -61,7 +62,7 @@ class PersonDetails extends Component {
 
     onToggleAll(ele) {
         var items= this.state.items
-        const persons= this.props.persons
+        const persons= this.props.persons1
         if(persons)
         var checkboxes = document.getElementsByTagName('input');
         if (ele.target.checked) {
@@ -102,21 +103,22 @@ class PersonDetails extends Component {
         let userRes = window.confirm("Are you sure you want to delete this person");
         if(userRes){
             if(this.state.expenses){
+                console.log(this.props.persons1)
          var items= this.state.items
        items&& items.map(pol=>{
-        var pname= this.props.persons.filter(item=>item.id==pol)[0].nickname
+        var pname= this.props.persons1.filter(item=>item.id==pol)[0].nickname
         var expp= this.state.expenses.filter(item=>item[2]==pname || item[4].includes(pname)).length
         if(expp!=0){
-        //    var newUserRes =  confirm("Cannot delete person as involved in transaction")
+        alert("Cannot delete person as involved in transaction")
         }
         else{
             console.log('items', this.state.items)
-            this.props.deletePerson(this.state.items);
+            this.props.deletePerson({items:this.state.items,sheetId: this.state.sheetId});
             
         }
        })
-        if (this.props.persons && this.props.persons.length <= 2) {
-            console.log(this.props.persons.length)
+        if (this.props.persons1 && this.props.persons1.length <= 2) {
+            console.log(this.props.persons1.length)
             console.log(this.state.isExpenseDisabled)
             this.setState({
                 isExpenseDisabled: true
@@ -124,7 +126,7 @@ class PersonDetails extends Component {
         }}
         else{
             console.log('items', this.state.items)
-            this.props.deletePerson(this.state.items );
+            this.props.deletePerson({items:this.state.items,sheetId: this.state.sheetId} );
         }}
     }
 
@@ -170,7 +172,7 @@ class PersonDetails extends Component {
     async saveAndNew(e) {
         e.preventDefault();
         console.log(this.props)
-        if (this.props.persons && this.props.persons.length >= 1) {
+        if (this.props.persons1 && this.props.persons1.length >= 1) {
             if (this.state.isExpenseDisabled) {
                 this.setState({
                     isExpenseDisabled: false
@@ -191,8 +193,8 @@ class PersonDetails extends Component {
 
     editMode(index, event) {
         console.log('item index = ', index);
-        console.log(this.props.persons);
-        var data = this.props.persons[index]
+        console.log(this.props.persons1);
+        var data = this.props.persons1[index]
         console.log(data)
         this.setState({
             showModalSave: true, name: data.name,
@@ -239,7 +241,6 @@ class PersonDetails extends Component {
             })
     }
 
-
     capitalize(s)
 {
     return s && s[0].toUpperCase() + s.slice(1);
@@ -247,7 +248,7 @@ class PersonDetails extends Component {
 
     render() {
         this.interval = setInterval(() => {
-            if (this.props.persons && this.props.persons.length >= 2) {
+            if (this.props.persons1 && this.props.persons1.length >= 2) {
                 if (this.state.isExpenseDisabled && this.state.chckall) {
                     this.setState({
                         isExpenseDisabled: false,
@@ -280,11 +281,11 @@ class PersonDetails extends Component {
         }, 1000);
 
 
-        const persons = this.props.persons;
+        const persons = this.props.persons1;
 
         return (
             <div>
-            <Sheets persons={this.props.persons} id= {this.state.sheetId}/>
+            <Sheets persons={this.props.persons1} id= {this.state.sheetId}/>
                 <Tabs activeKey={this.state.key}
                     onSelect={key => this.setState({ key })}>
                     <Tab eventKey="group" title="Create Group" ><table border="1">
@@ -354,7 +355,7 @@ class PersonDetails extends Component {
                         <Expense open={this.open}
                             close={this.close} 
                             handleChange={this.handleChange}
-                            persons={this.props.persons}
+                            persons={this.props.persons1}
                             handleSelect={this.handleSelect}
                             isComputeDisabled={this.state.isComputeDisabled}
                             />
@@ -449,7 +450,8 @@ const mapStateToProps = (state, ownProps) => {
     console.log(state)
     return {
         personError: state.person.personError,
-        persons: state.person.data1
+        persons: state.person.data,
+        persons1: state.person.data1,
     }
 }
 
