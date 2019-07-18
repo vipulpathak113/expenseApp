@@ -12,7 +12,6 @@ const sheetReducer = (state = initState, action) => {
 
     switch (action.type) {
         case 'CREATE_SHEET':
-            console.log("created successfully", action.data)
             return {
                 ...state,
                 sheetSuccess: 'New Sheet Created successfully',
@@ -21,7 +20,6 @@ const sheetReducer = (state = initState, action) => {
 
             };
         case 'CREATE_SHEET_ERROR':
-            console.log("created error", action.err)
             return {
 
                 sheetError: 'Sheet not created',
@@ -29,19 +27,16 @@ const sheetReducer = (state = initState, action) => {
             };
        
         case 'FETCH_PAYMENTS':
-            console.log("fetched successfully", action.payload)
             return {...state,
                 data1: action.payload}
 
 
         case 'FETCH_SHEETS':
-            console.log("fetched successfully", action.payload)
             return {...state,
                 sheet: action.payload}            
 
 
         case 'UPDATE_SHEET':
-            console.log("updated successfully", action.data)
             return {
                 ...state,
                 sheetSuccess: 'Sheet Updated successfully',
@@ -50,7 +45,6 @@ const sheetReducer = (state = initState, action) => {
 
             };
         case 'UPDATE_SHEET_ERROR':
-            console.log("updated error", action.err)
             return {
 
                 sheetError: 'Sheet not updated',

@@ -18,8 +18,6 @@ class Home extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log(this.props)
-
         this.props.createSheet(this.state);
 
     }
@@ -53,12 +51,6 @@ class Home extends Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
-    console.log(state)
-
-    return {
-    }
-}
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -67,4 +59,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(null, mapDispatchToProps)(Home);

@@ -11,7 +11,6 @@ import Expense from './Expenses'
 import axios from 'axios'
 import Sheets from './Sheets'
 import Compute from './Compute'
-import store from '../store/store';
 
 
 
@@ -44,8 +43,6 @@ class PersonDetails extends Component {
     }
 
     onToggle(e) {
-        console.log(e.target.value)
-
         const items = this.state.items
         let index
         if (e.target.checked) {
@@ -76,7 +73,6 @@ class PersonDetails extends Component {
                 this.setState({
                     items:items,isSelected: false
                 })
-                console.log(this.state.items)
 
         } else {
             for (var i = 0; i < checkboxes.length; i++) {
@@ -88,7 +84,6 @@ class PersonDetails extends Component {
             this.setState({
                 items:items,isSelected: true
             })
-            console.log(this.state.items)
         }
        
     }
@@ -103,7 +98,6 @@ class PersonDetails extends Component {
         let userRes = window.confirm("Are you sure you want to delete this person");
         if(userRes){
             if(this.state.expenses){
-                console.log(this.props.persons1)
          var items= this.state.items
        items&& items.map(pol=>{
         var pname= this.props.persons1.filter(item=>item.id==pol)[0].nickname
@@ -112,26 +106,21 @@ class PersonDetails extends Component {
         alert("Cannot delete person as involved in transaction")
         }
         else{
-            console.log('items', this.state.items)
             this.props.deletePerson({items:this.state.items,sheetId: this.state.sheetId});
             
         }
        })
         if (this.props.persons1 && this.props.persons1.length <= 2) {
-            console.log(this.props.persons1.length)
-            console.log(this.state.isExpenseDisabled)
             this.setState({
                 isExpenseDisabled: true
             });
         }}
         else{
-            console.log('items', this.state.items)
             this.props.deletePerson({items:this.state.items,sheetId: this.state.sheetId} );
         }}
     }
 
     handleChange = (e) => {
-        console.log(e.target.id)
         this.setState({
             [e.target.id]: e.target.value
         })
@@ -156,7 +145,6 @@ class PersonDetails extends Component {
 
     async save(e) {
         e.preventDefault();
-        console.log(this.props)
         this.props.createPerson({ name: this.state.name,
              nickname: this.state.nickname,
               comment: this.state.comment,
@@ -171,7 +159,6 @@ class PersonDetails extends Component {
 
     async saveAndNew(e) {
         e.preventDefault();
-        console.log(this.props)
         if (this.props.persons1 && this.props.persons1.length >= 1) {
             if (this.state.isExpenseDisabled) {
                 this.setState({
@@ -192,10 +179,7 @@ class PersonDetails extends Component {
     }
 
     editMode(index, event) {
-        console.log('item index = ', index);
-        console.log(this.props.persons1);
         var data = this.props.persons1[index]
-        console.log(data)
         this.setState({
             showModalSave: true, name: data.name,
             nickname: data.nickname,
@@ -234,7 +218,6 @@ class PersonDetails extends Component {
 
             axios.get(`http://127.0.0.1:8000/expense/?pk=${id}`)
             .then(res => {
-                console.log(res)
                 if (res.status === 200) {
                     this.setState({ expenses: res.data });
                 }
@@ -375,23 +358,23 @@ class PersonDetails extends Component {
                         </Modal.Header>
                         <Modal.Body>
                             <div><span>Person Name </span><input type="text" 
-                            style={{ 'width': '280px', 'margin-left': '11px' }}
+                            style={{ 'width': '280px', 'marginLeft': '11px' }}
                              id="name" value={this.state.name}
                               onChange={this.handleChange.bind(this)}
                             ></input>
                             </div>
                            
                             <div><span>Display Name</span> 
-                            <input type="text" style={{ 'margin-top': '25px', 'margin-left': '9px' }}
+                            <input type="text" style={{ 'marginTop': '25px', 'marginLeft': '9px' }}
                              id="nickname" 
                              value={this.state.nickname}
                             onChange={this.handleChange.bind(this)}
                             ></input>
                             
                             </div>
-                           <span class="error">{this.props.personError?this.capitalize(this.props.personError.nickname[0]):""}</span>
+                           <span className="error">{this.props.personError?this.capitalize(this.props.personError.nickname[0]):""}</span>
                            <div><span className="comment">Comment</span> <input type="text" 
-                           style={{ 'margin-top': '25px', 'width': '280px', 'margin-right': '-2' }}
+                           style={{ 'marginTop': '25px', 'width': '280px', 'marginRight': '-2' }}
                            id="comment" value={this.state.comment} 
                            onChange={this.handleChange.bind(this)}></input></div>
                         </Modal.Body>
@@ -415,17 +398,17 @@ class PersonDetails extends Component {
                         <Modal.Body>
                             <div><span>Person Name</span> 
                             <input type="text" 
-                            style={{ 'width': '280px', 'margin-left': '11px' }} 
+                            style={{ 'width': '280px', 'marginLeft': '11px' }} 
                             id="name" value={this.state.name}
                              onChange={this.handleChange.bind(this)}></input></div>
                             <div><span>Display Name </span>
                             <input type="text"
-                             style={{ 'margin-top': '25px', 'margin-left': '10px' }}
+                             style={{ 'marginTop': '25px', 'marginLeft': '10px' }}
                               id="nickname" value={this.state.nickname}
                                onChange={this.handleChange.bind(this)}></input></div>
                             <div><span className="comment">Comment</span>
                              <input type="text"
-                              style={{ 'margin-top': '25px', 'width': '280px' }}
+                              style={{ 'marginTop': '25px', 'width': '280px' }}
                                id="comment" value={this.state.comment}
                                 onChange={this.handleChange.bind(this)}></input></div>
                         </Modal.Body>
@@ -447,7 +430,6 @@ class PersonDetails extends Component {
     }
 }
 const mapStateToProps = (state, ownProps) => {
-    console.log(state)
     return {
         personError: state.person.personError,
         persons: state.person.data,

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios'
 import moment from 'moment'
 import { Button, Modal } from 'react-bootstrap';
 import { updateSheet } from '../store/actions/sheetAction'
@@ -9,7 +8,6 @@ import { connect } from 'react-redux'
 
 class Sheets extends Component{
     constructor(props){
-        console.log(props)
         super(props);
         this.state={
             editModal: false,
@@ -30,7 +28,6 @@ componentDidMount(){
 
 editSheet() {   
     var data = this.props.sheets[0];
-    console.log(data)
     this.setState({
         editModal: true,
         display_name: data.display_name,
@@ -42,7 +39,6 @@ editSheet() {
 }
 
 handleChange = (e) => {
-    console.log(e.target.id)
     this.setState({
         [e.target.id]: e.target.value
     })
@@ -71,7 +67,7 @@ saveEdit(e) {
             <div>
                     <div className="created"><b className="sheetName1">{sheets ? sheets.display_name === '' ? "New Expense Sheet" : sheets.display_name : ""}</b>
                         <b>-{sheets ? sheets.description : ""}</b>
-                        <a onClick={this.editSheet.bind(this)} className="edit"><u style={{ "margin-left": "30px" }}>Edit</u></a>
+                        <a onClick={this.editSheet.bind(this)} className="edit"><u style={{ "marginLeft": "30px" }}>Edit</u></a>
                     </div>
                     <div className="created"> {persons ? <span><b>{persons.length} Persons | </b></span> : ""}
                     {payment ? <span><b>{payment.expenses} expenses | </b></span> : ""}
@@ -103,7 +99,6 @@ saveEdit(e) {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    console.log(state)
     return {
         payment: state.sheet.data1,
         sheets:  state.sheet.sheet

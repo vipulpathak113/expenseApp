@@ -13,7 +13,6 @@ class Compute extends Component{
 
         axios.get(`http://127.0.0.1:8000/expense/?pk=${id}`)
             .then(res => {
-                console.log(res)
                 if (res.status === 200) {
                     this.setState({ expenses: res.data });
                 }

@@ -3,11 +3,9 @@ import axios from 'axios'
 
 
 export const getAllExpenses = (expense) => {
-    console.log(expense)
     return (dispatch) => {
         axios.get(`http://127.0.0.1:8000/expense/?pk=${expense.id}`)
         .then(response => {
-            console.log(response)
                 dispatch({ type: 'FETCH_EXPENSES', payload: response.data })
         })
     }
@@ -15,23 +13,19 @@ export const getAllExpenses = (expense) => {
 }
 
 export const createExpense = (expense) => {
-    console.log(expense)
     return (dispatch, getState) => {
         axios.post("http://127.0.0.1:8000/expense/",
             expense
         ).then(response => {
-            console.log(response)
             if (response.status === 201) {
                 dispatch({ type: 'CREATE_EXPENSE', data: response.data })
                 axios.get(`http://127.0.0.1:8000/expense/?pk=${expense.sheetId}`)
         .then(response => {
-            console.log(response)
                 dispatch({ type: 'FETCH_EXPENSES', payload: response.data })
         })
 
         axios.get(`http://127.0.0.1:8000/expense/payment/?pk=${expense.sheetId}`)
         .then(response => {
-            console.log(response)
                 dispatch({ type: 'FETCH_PAYMENTS', payload: response.data })
         })
 
@@ -44,7 +38,6 @@ export const createExpense = (expense) => {
 }
 
 export const updateExpense = (expense) => {
-    console.log(expense)
     return (dispatch, getState) => {
         axios.put(`http://127.0.0.1:8000/expense/?pk=${expense.sheetId}&eid=${expense.expenseId}`,
             {
@@ -58,12 +51,10 @@ export const updateExpense = (expense) => {
 
             }
         ).then(response => {
-            console.log(response)
             if (response.status === 200) {
                 dispatch({ type: 'UPDATE_EXPENSE', data: response.data })
                 axios.get(`http://127.0.0.1:8000/expense/?pk=${expense.sheetId}`)
         .then(response => {
-            console.log(response)
                 dispatch({ type: 'FETCH_EXPENSES', payload: response.data })
         })
             }
@@ -77,27 +68,20 @@ export const updateExpense = (expense) => {
 }
 
 export const deleteExpense = (expense) => {
-    console.log(expense)
     return (dispatch, getState) => {
-        console.log(expense)
         if (expense.items)
             expense.items.map((item, id) => {
-                console.log(item)
-                console.log(id)
                 axios.delete(`http://127.0.0.1:8000/expense/?pk=${item}`
                 ).then(response => {
-                    console.log(response)
                     if (response.status === 204) {
                         dispatch({ type: 'DELETE_EXPENSE', data: response.data })
                         axios.get(`http://127.0.0.1:8000/expense/?pk=${expense.sheetId}`)
         .then(response => {
-            console.log(response)
                 dispatch({ type: 'FETCH_EXPENSES', payload: response.data })
         })
 
         axios.get(`http://127.0.0.1:8000/expense/payment/?pk=${expense.sheetId}`)
         .then(response => {
-            console.log(response)
                 dispatch({ type: 'FETCH_PAYMENTS', payload: response.data })
         })
 

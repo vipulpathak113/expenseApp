@@ -41,12 +41,8 @@ class Expense extends Component {
     }
 }
 
-    handleStart = () => {
-        console.log('here');
-    }
 
     handleRadioChange = (event) => {
-        console.log("event", this.props.persons[event].id)
         this.setState({
             selectedRadio: event,
             paidBy: this.props.persons[event].id
@@ -54,13 +50,8 @@ class Expense extends Component {
     };
 
     onToggle(e) {
-        console.log(this.props.persons)
-
         const paidTo = this.state.paidTo
-        console.log(this.state.paidTo)
         let index
-
-
         if (e.target.checked) {
 
             paidTo.push(this.props.persons[e.target.value].nickname)
@@ -70,7 +61,6 @@ class Expense extends Component {
             paidTo.splice(index, 1)
         }
         this.setState({ paidTo: paidTo })
-        console.log(this.state.paidTo)
 
     }
 
@@ -81,7 +71,6 @@ class Expense extends Component {
     }
 
     handleChange = (e) => {
-        console.log(e.target.id)
         this.setState({
             [e.target.id]: e.target.value
         })
@@ -148,13 +137,10 @@ class Expense extends Component {
     }
 
     deleteSelected() {
-        console.log(this.state.paidTo)
         alert("Are you sure you want to delete this expense");
 
         this.props.deleteExpense({ items: this.state.items,expenses:this.props.expenses,sheetId: this.state.sheetId });
         if (this.props.expenses && this.props.expenses.length < 1) {
-            console.log(this.props.expenses.length)
-            console.log(this.state.isPayment)
             this.setState({
                 isPayment: true
             });
@@ -163,11 +149,7 @@ class Expense extends Component {
 
 
     editMode(index, event) {
-        console.log('item index = ', index)
-        console.log(this.props.expenses)
         var data = this.props.expenses[index]
-        // debugger;
-        console.log(data)
         this.setState({
             showModalSave: true,
             startDate: new Date(Date.parse(data[0])),
@@ -205,12 +187,9 @@ class Expense extends Component {
     }
 
     onToggleEdit(e) {
-        console.log(this.props.expenses)
-
         const items = this.state.items
         let index
         if (e.target.checked) {
-            console.log(e.target.value)
             this.setState({ isSelected: false })
             items.push(this.props.expenses[e.target.value][5])
         } else {
@@ -224,9 +203,6 @@ class Expense extends Component {
     }
 
     handleSelection(e){
-        console.log(e.target.value)
-        // var expenses= this.props.expenses
-        // console.log(expenses)
         if (e.target.value !== "all" && newExpenses) {
             let selectedExpenses = newExpenses.filter(item => item[2] === e.target.value);
             this.setState({
@@ -242,7 +218,6 @@ class Expense extends Component {
     onToggleAll(ele) {
         var items= this.state.items
         const expenses= this.props.expenses
-        console.log(expenses)
         if(expenses)
         var checkboxes = document.getElementsByTagName('input');
         if (ele.target.checked) {
@@ -256,7 +231,6 @@ class Expense extends Component {
                 this.setState({
                     items:items,isSelected: false
                 })
-                console.log(this.state.items)
 
         } else {
             for (var i = 0; i < checkboxes.length; i++) {
@@ -268,7 +242,6 @@ class Expense extends Component {
             this.setState({
                 items:items,isSelected: true
             })
-            console.log(this.state.items)
         }
        
     }
@@ -320,7 +293,7 @@ class Expense extends Component {
             
             <div style={{ padding: '10px' }}>
             <span>Filter By </span>
-            <select class="mdb-select md-form"
+            <select className="mdb-select md-form"
                     value={this.state.selectValue}
                     onChange={this.handleSelection.bind(this)}>
                     <option value="all" >Anyone</option>
@@ -355,7 +328,7 @@ class Expense extends Component {
                                     <td><center>{item[3]}</center></td>
                                     <td><center>{item[4] && item[4].map((name) => {
                                         return (
-                                            <span style={{ 'padding-right': '5px' }}>{name}</span>
+                                            <span style={{ 'paddingRight': '5px' }}>{name}</span>
                                         )
                                     })}</center></td>
                                 </tr>
@@ -363,7 +336,7 @@ class Expense extends Component {
                         })}
                     </thead>
                 </table>
-                <div style={{ 'margin-top': '15px' }}>>><b>Click On Add Expense to enter the expense. Once done, click Compute Payments.</b></div>
+                <div style={{ 'marginTop': '15px' }}>>><b>Click On Add Expense to enter the expense. Once done, click Compute Payments.</b></div>
                 <div>
                     <Button
                         variant="primary"
@@ -513,7 +486,6 @@ class Expense extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-    console.log(state)
     return {
         expenses: state.expense.data1
     }

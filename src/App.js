@@ -10,7 +10,7 @@ function App() {
   return (
     <Router history={history}>
       <div>
-        <img src={require('./logo.png')} alt="logo" height="40px" width="40px" style={{ "margin-bottom": "14px" }} />
+        <img src={require('./logo.png')} alt="logo" height="40px" width="40px" style={{ "marginBottom": "14px" }} />
         <span><span className="pay">PAY</span><span className="debt">DEBT</span></span></div>
       <Switch>
         <Route exact path='/' component={Home} />
