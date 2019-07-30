@@ -1,67 +1,60 @@
-
-
 const initState = {
-    expenseSuccess: null,
-    expenseError: null,
-    data: '',
-    data1:''
-}
+  expenseSuccess: null,
+  expenseError: null,
+  data: "",
+  data1: ""
+};
 
 const expenseReducer = (state = initState, action) => {
+  switch (action.type) {
+    case "CREATE_EXPENSE":
+      return {
+        ...state,
+        expenseSuccess: "New expense Created successfully",
+        expenseError: null,
+        data: [...state.data, action.data]
+      };
+    case "CREATE_EXPENSE_ERROR":
+      return {
+        expenseError: "expense not created",
+        expenseSuccess: null
+      };
 
-    switch (action.type) {
-        case 'CREATE_EXPENSE':
-            return {
-                ...state,
-                expenseSuccess: 'New expense Created successfully',
-                expenseError: null,
-                data: [...state.data,action.data]
+    case "FETCH_EXPENSES":
+      return { ...state, data1: [...action.payload] };
 
-            };
-        case 'CREATE_EXPENSE_ERROR':
-            return {
-                expenseError: 'expense not created',
-                expenseSuccess: null
-            };
+    case "FETCH_EXPENSES_FILTER":
+      return { ...state, data1: [...action.payload] };
 
-        case 'FETCH_EXPENSES':
-            return {...state,
-                data1: [...action.payload]
-            }       
+    case "UPDATE_EXPENSE":
+      return {
+        ...state,
+        sheetSuccess: "Expense Updated successfully",
+        sheetError: null,
+        data: action.data
+      };
+    case "UPDATE_EXPENSE_ERROR":
+      return {
+        sheetError: "Expense not updated",
+        sheetSuccess: null
+      };
 
-        case 'UPDATE_EXPENSE':
-            return {
-                ...state,
-                sheetSuccess: 'Expense Updated successfully',
-                sheetError: null,
-                data: action.data
+    case "DELETE_EXPENSE":
+      return {
+        ...state,
+        expenseSuccess: "Expense deleted successfully",
+        expenseError: null,
+        data: action.data
+      };
+    case "DELETE_EXPENSE_ERROR":
+      return {
+        expenseError: "expense not deleted",
+        expenseSuccess: null
+      };
 
-            };
-        case 'UPDATE_EXPENSE_ERROR':
-            return {
+    default:
+      return state;
+  }
+};
 
-                sheetError: 'Expense not updated',
-                sheetSuccess: null
-            };
-
-        case 'DELETE_EXPENSE':
-            return {
-                ...state,
-                expenseSuccess: 'Expense deleted successfully',
-                expenseError: null,
-                data: action.data
-
-            };
-        case 'DELETE_EXPENSE_ERROR':
-            return {
-
-                expenseError: 'expense not deleted',
-                expenseSuccess: null
-            };
-
-        default:
-            return state;
-    }
-}
-
-export default expenseReducer
+export default expenseReducer;

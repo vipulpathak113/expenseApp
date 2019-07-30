@@ -5,6 +5,7 @@ import { createExpense } from '../store/actions/expenseAction'
 import { updateExpense } from '../store/actions/expenseAction'
 import { deleteExpense } from '../store/actions/expenseAction'
 import {getAllExpenses} from '../store/actions/expenseAction'
+import {getfilterexpense} from '../store/actions/expenseAction'
 import { connect } from 'react-redux'
 import axios from 'axios'
 
@@ -12,7 +13,7 @@ import axios from 'axios'
 import "react-datepicker/dist/react-datepicker.css";
 
 // var value = new Date().toISOString();
-var newExpenses = ''
+
 
 class Expense extends Component {
     constructor(props) {
@@ -37,7 +38,8 @@ class Expense extends Component {
         isSelected: true,
         sheetId: '',
         payment:'',
-        chckall:true
+        chckall:true,
+        selectValue:''
     }
 }
 
@@ -203,15 +205,13 @@ class Expense extends Component {
     }
 
     handleSelection(e){
-        if (e.target.value !== "all" && newExpenses) {
-            let selectedExpenses = newExpenses.filter(item => item[2] === e.target.value);
-            this.setState({
-                expenses: selectedExpenses
-            })
+        console.log(e.target.value)
+        this.setState({selectValue:e.target.value});
+        if (e.target.value !== "all") {
+          this.props.getfilterexpense(e.target.value)
         } else {
-            this.setState({
-                expenses: newExpenses
-            })
+            var id = window.location.pathname.substring(7, 9)
+            this.props.getAllExpenses({id:id})
         }
     }
 
@@ -288,6 +288,11 @@ class Expense extends Component {
         }, 1000);
 
         const field = this.props.expenses;
+        var arr2=[]
+     field && field.map(item=>{
+         arr2.push(item[2])
+     })
+   var arr3= [... new Set(arr2)]
         return (
             <div>
             
@@ -297,9 +302,9 @@ class Expense extends Component {
                     value={this.state.selectValue}
                     onChange={this.handleSelection.bind(this)}>
                     <option value="all" >Anyone</option>
-            {this.props.persons && this.props.persons.map((item, id) => {
+            {arr3 && arr3.map((item, id) => {
                 return(
-                 <option value={item.nickname} >{item.nickname}</option>
+                 <option value={item} >{item}</option>
                  ) })}
                 </select>
 
@@ -486,6 +491,7 @@ class Expense extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
+    console.log(state)
     return {
         expenses: state.expense.data1
     }
@@ -496,7 +502,8 @@ const mapDispatchToProps = (dispatch) => {
         createExpense: (expense) => dispatch(createExpense(expense)),
         updateExpense: (expense) => dispatch(updateExpense(expense)),
         deleteExpense: (expense) => dispatch(deleteExpense(expense)),
-        getAllExpenses: (expense)=>dispatch (getAllExpenses(expense))
+        getAllExpenses: (expense)=>dispatch (getAllExpenses(expense)),
+        getfilterexpense: (expense)=>dispatch(getfilterexpense(expense))
     }
 }
 
