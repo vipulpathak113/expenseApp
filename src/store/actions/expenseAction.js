@@ -1,9 +1,14 @@
 import axios from "axios";
 
 export const getAllExpenses = expense => {
+  console.log(expense);
   return dispatch => {
     axios
-      .get(`http://127.0.0.1:8000/expense/?pk=${expense.id}`)
+      .get(
+        `http://127.0.0.1:8000/expense/compute/?pk=${expense.id}&pageNo=${
+          expense.currentPage
+        }`
+      )
       .then(response => {
         dispatch({ type: "FETCH_EXPENSES", payload: response.data });
       });
@@ -29,7 +34,11 @@ export const createExpense = expense => {
         if (response.status === 201) {
           dispatch({ type: "CREATE_EXPENSE", data: response.data });
           axios
-            .get(`http://127.0.0.1:8000/expense/?pk=${expense.sheetId}`)
+            .get(
+              `http://127.0.0.1:8000/expense/compute/?pk=${
+                expense.sheetId
+              }&pageNo=${expense.currentPage}`
+            )
             .then(response => {
               dispatch({ type: "FETCH_EXPENSES", payload: response.data });
             });
@@ -51,7 +60,7 @@ export const updateExpense = expense => {
   return (dispatch, getState) => {
     axios
       .put(
-        `http://127.0.0.1:8000/expense/?pk=${expense.sheetId}&eid=${
+        `http://127.0.0.1:8000/expense/compute/?pk=${expense.sheetId}&eid=${
           expense.expenseId
         }`,
         {
@@ -68,7 +77,11 @@ export const updateExpense = expense => {
         if (response.status === 200) {
           dispatch({ type: "UPDATE_EXPENSE", data: response.data });
           axios
-            .get(`http://127.0.0.1:8000/expense/?pk=${expense.sheetId}`)
+            .get(
+              `http://127.0.0.1:8000/expense/?pk=${expense.sheetId}&pageNo=${
+                expense.currentPage
+              }`
+            )
             .then(response => {
               dispatch({ type: "FETCH_EXPENSES", payload: response.data });
             });
@@ -90,7 +103,11 @@ export const deleteExpense = expense => {
             if (response.status === 204) {
               dispatch({ type: "DELETE_EXPENSE", data: response.data });
               axios
-                .get(`http://127.0.0.1:8000/expense/?pk=${expense.sheetId}`)
+                .get(
+                  `http://127.0.0.1:8000/expense/compute/?pk=${
+                    expense.sheetId
+                  }&pageNo=${expense.currentPage}`
+                )
                 .then(response => {
                   dispatch({ type: "FETCH_EXPENSES", payload: response.data });
                 });

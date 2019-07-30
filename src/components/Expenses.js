@@ -39,7 +39,8 @@ class Expense extends Component {
         sheetId: '',
         payment:'',
         chckall:true,
-        selectValue:''
+        selectValue:'',
+        currentPage: 1,
     }
 }
 
@@ -93,7 +94,8 @@ class Expense extends Component {
             amount: this.state.amount,
             paidBy: this.state.paidBy !== "" ? this.state.paidBy : this.props.persons[0].id,
             paidTo: this.state.paidTo,
-            sheetId: this.state.sheetId
+            sheetId: this.state.sheetId,
+            currentPage:this.state.currentPage
 
 
         });
@@ -121,7 +123,8 @@ class Expense extends Component {
             amount: this.state.amount,
             paidBy: this.state.paidBy !== "" ? this.state.paidBy : this.props.persons[0].id,
             paidTo: this.state.paidTo,
-            sheetId: this.state.sheetId
+            sheetId: this.state.sheetId,
+            currentPage:this.state.currentPage
 
 
         });
@@ -141,7 +144,7 @@ class Expense extends Component {
     deleteSelected() {
         alert("Are you sure you want to delete this expense");
 
-        this.props.deleteExpense({ items: this.state.items,expenses:this.props.expenses,sheetId: this.state.sheetId });
+        this.props.deleteExpense({ items: this.state.items,expenses:this.props.expenses,sheetId: this.state.sheetId,currentPage:this.state.currentPage });
         if (this.props.expenses && this.props.expenses.length < 1) {
             this.setState({
                 isPayment: true
@@ -173,7 +176,8 @@ class Expense extends Component {
             paidTo: this.state.paidTo,
             paidBy: this.state.paidBy,
             expenseId: this.state.expenseId,
-            sheetId: this.state.sheetId
+            sheetId: this.state.sheetId,
+            currentPage:this.state.currentPage
         });
         this.setState({
             showModalSave: false,
@@ -246,6 +250,34 @@ class Expense extends Component {
        
     }
 
+    clickNext(event) {
+          this.props.getAllExpenses({id:this.state.sheetId,currentPage:Number(event.target.id) + 1})
+
+        this.setState({
+          currentPage: Number(event.target.id) + 1
+        });
+    
+        if (Number(event.target.id) + 1 >= Math.ceil(this.props.count / 2)) {
+          this.setState({
+            dis: "none"
+          });
+        }
+      }
+    
+      clickPrev(event) {
+        console.log(Number(event.target.id) - 1);
+        this.props.getAllExpenses({id:this.state.sheetId,currentPage:Number(event.target.id) - 1})
+        this.setState({
+          currentPage: Number(event.target.id) - 1
+        });
+      }
+    
+      clickLast(event) {
+        this.props.getAllExpenses({id:this.state.sheetId,currentPage:Number(event.target.id)})
+        this.setState({
+          currentPage: Number(event.target.id)
+        });
+      }
 
 
     componentDidMount() {
@@ -253,7 +285,7 @@ class Expense extends Component {
         this.setState({
             sheetId: id
         })
-        this.props.getAllExpenses({id:id})
+        this.props.getAllExpenses({id:id,currentPage:this.state.currentPage})
     }
     render() {
 
@@ -296,20 +328,82 @@ class Expense extends Component {
         return (
             <div>
             
-            <div style={{ padding: '10px' }}>
+            <div style={{ padding: '5px' }}>
             <span>Filter By </span>
             <select className="mdb-select md-form"
                     value={this.state.selectValue}
-                    onChange={this.handleSelection.bind(this)}>
+                    onChange={this.handleSelection.bind(this)}
+                    style={{"margin-right": "24px"}}
+                    >
                     <option value="all" >Anyone</option>
             {arr3 && arr3.map((item, id) => {
                 return(
                  <option value={item} >{item}</option>
                  ) })}
                 </select>
-
                
+
+                <div className="pagination-items" style={{"display": "inline-flex"}}> 
+
+                <button
+                type="button"
+                id={1}
+                style={{
+                  display: this.state.currentPage > 1 ? "block" : "none"
+                }}
+                onClick={this.clickLast.bind(this)}
+                className="allbtn"
+              >
+                First
+              </button>
+    
+              <button
+                type="button"
+                id={this.state.currentPage}
+                style={{
+                  display: this.state.currentPage !== 1 ? "block" : "none"
+                }}
+                onClick={this.clickPrev.bind(this)}
+                className="prevbtn"
+              >
+                Previous
+              </button>
+          <p className="pagecount">Showing page {this.state.currentPage} of{" "}
+          {Math.ceil(this.props.count / 2)} </p>
+              <button
+                type="button"
+                id={this.state.currentPage}
+                style={{
+                  display:
+                    Math.ceil(this.props.count / 2) > this.state.currentPage
+                      ? "block"
+                      : "none"
+                }}
+                onClick={this.clickNext.bind(this)}
+                className="nxtbtn"
+              >
+                Next
+              </button>
+              <button
+                type="button"
+                id={Math.ceil(this.props.count / 2)}
+                style={{
+                  display:
+                    Math.ceil(this.props.count / 2) === this.state.currentPage
+                      ? "none"
+                      : "block"
+                }}
+                onClick={this.clickLast.bind(this)}
+                className="allbtn"
+              >
+                Last
+              </button>
+                
                 </div>
+                </div>
+                
+
+
 
                 <table border="1">
                     <thead>
@@ -493,7 +587,8 @@ class Expense extends Component {
 const mapStateToProps = (state, ownProps) => {
     console.log(state)
     return {
-        expenses: state.expense.data1
+        expenses: state.expense.data1.expenses,
+        count: state.expense.data1.count
     }
 }
 
