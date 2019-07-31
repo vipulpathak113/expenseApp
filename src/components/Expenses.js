@@ -148,9 +148,10 @@ class Expense extends Component {
         alert("Are you sure you want to delete this expense");
 
         this.props.deleteExpense({ items: this.state.items,expenses:this.props.expenses,sheetId: this.state.sheetId,currentPage:this.state.currentPage });
+    
         if (this.props.expenses && this.props.expenses.length < 1) {
             this.setState({
-                isPayment: true
+                isPayment: true,
             });
         }
     }
@@ -215,7 +216,7 @@ class Expense extends Component {
         console.log(e.target.value)
         this.setState({selectValue:e.target.value});
         if (e.target.value !== "all") {
-          this.props.getfilterexpense({value:e.target.value,currentPage:1})
+          this.props.getfilterexpense({sheetId:this.state.sheetId,value:e.target.value,currentPage:1})
         } else {
             var id = window.location.pathname.substring(7, 9)
             this.props.allexpense({id:id,currentPage:1})
@@ -229,6 +230,7 @@ class Expense extends Component {
         if (e.target.value == 10) {
             var id = window.location.pathname.substring(7, 9)
               this.props.allexpense({id:id,currentPage:1})
+              this.setState({currentPage:1});
           } else {
               
               this.props.filterexpense({sheetId:this.state.sheetId,value:e.target.value,selectValue:this.state.selectValue})
@@ -270,7 +272,7 @@ class Expense extends Component {
     }
 
     clickNext(event) {
-          this.props.allexpense({id:this.state.sheetId,currentPage:Number(event.target.id) + 1})
+          this.props.getAllExpenses({id:this.state.sheetId,currentPage:Number(event.target.id) + 1,selectValue:this.state.selectValue})
 
         this.setState({
           currentPage: Number(event.target.id) + 1
@@ -292,7 +294,7 @@ class Expense extends Component {
       }
     
       clickLast(event) {
-        this.props.allexpense({id:this.state.sheetId,currentPage:Number(event.target.id)})
+        this.props.getAllExpenses({id:this.state.sheetId,currentPage:Number(event.target.id),selectValue:this.state.selectValue})
         this.setState({
           currentPage: Number(event.target.id)
         });
@@ -423,7 +425,7 @@ class Expense extends Component {
                 id={Math.ceil(this.props.count /10)}
                 style={{
                   display:
-                  this.props.count!== "undefined" || Math.ceil(this.props.count /10) === this.state.currentPage
+                  this.props.count== "undefined" || Math.ceil(this.props.count /10) === this.state.currentPage
                       ? "none"
                       : "block"
                 }}
@@ -634,7 +636,7 @@ const mapDispatchToProps = (dispatch) => {
         getAllExpenses: (expense)=>dispatch (getAllExpenses(expense)),
         getfilterexpense: (expense)=>dispatch(getfilterexpense(expense)),
         filterexpense: (expense)=> dispatch(filterexpense(expense)),
-        allexpense: (expense)=> dispatch(allexpense(expense)),
+        allexpense: (expense)=> dispatch(allexpense(expense))
         
     }
 }

@@ -216,10 +216,11 @@ class PersonDetails extends Component {
         })
        this.props.getAllPersons({id:id})
 
-            axios.get(`http://127.0.0.1:8000/expense/?pk=${id}`)
+            axios.get(`http://127.0.0.1:8000/expense/?pk=${id}&pageNo=1`)
             .then(res => {
                 if (res.status === 200) {
-                    this.setState({ expenses: res.data });
+                    console.log(res)
+                    this.setState({ expenses: res.data.expenses });
                 }
             })
     }
