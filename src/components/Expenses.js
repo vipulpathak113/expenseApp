@@ -6,6 +6,7 @@ import { updateExpense } from '../store/actions/expenseAction'
 import { deleteExpense } from '../store/actions/expenseAction'
 import {getAllExpenses} from '../store/actions/expenseAction'
 import {getfilterexpense} from '../store/actions/expenseAction'
+import {filterexpense} from '../store/actions/expenseAction' 
 import { connect } from 'react-redux'
 import axios from 'axios'
 
@@ -41,6 +42,7 @@ class Expense extends Component {
         chckall:true,
         selectValue:'',
         currentPage: 1,
+        selectedValue:''
     }
 }
 
@@ -219,6 +221,22 @@ class Expense extends Component {
         }
     }
 
+    filterSelection(e){
+        console.log(e.target.value)
+        this.setState({selectedValue:e.target.value});
+
+        if (e.target.value == 10) {
+            var id = window.location.pathname.substring(7, 9)
+              this.props.getAllExpenses({id:id,currentPage:1})
+          } else {
+              
+              this.props.filterexpense({sheetId:this.state.sheetId,value:e.target.value})
+          }
+
+
+        
+    }
+
     onToggleAll(ele) {
         var items= this.state.items
         const expenses= this.props.expenses
@@ -257,7 +275,7 @@ class Expense extends Component {
           currentPage: Number(event.target.id) + 1
         });
     
-        if (Number(event.target.id) + 1 >= Math.ceil(this.props.count / 2)) {
+        if (Number(event.target.id) + 1 >= Math.ceil(this.props.count /10)) {
           this.setState({
             dis: "none"
           });
@@ -305,7 +323,7 @@ class Expense extends Component {
         }, 1000);
 
         this.interval = setInterval(() => {
-            if (this.props.expenses.length >= 2) {
+            if (this.props.expenses &&this.props.expenses.length >= 2) {
                 if (this.state.chckall) {
                     this.setState({
                         chckall: false
@@ -345,8 +363,8 @@ class Expense extends Component {
 
                 <span>Rows </span>
             <select className="mdb-select md-form"
-                    value={this.state.selectValue}
-                    onChange={this.handleSelection.bind(this)}
+                    value={this.state.selectedValue} 
+                    onChange={this.filterSelection.bind(this)}
                     style={{"margin-right": "24px"}}
                     >
                     <option value="10" >10</option>
@@ -384,13 +402,13 @@ class Expense extends Component {
                 Previous
               </button>
           <p className="pagecount">Showing page {this.state.currentPage} of{" "}
-          {Math.ceil(this.props.count / 2)} </p>
+          {this.props.count>10?Math.ceil(this.props.count /10):1} </p>
               <button
                 type="button"
                 id={this.state.currentPage}
                 style={{
                   display:
-                    Math.ceil(this.props.count / 2) > this.state.currentPage
+                  Math.ceil(this.props.count /10) > this.state.currentPage
                       ? "block"
                       : "none"
                 }}
@@ -401,10 +419,10 @@ class Expense extends Component {
               </button>
               <button
                 type="button"
-                id={Math.ceil(this.props.count / 2)}
+                id={Math.ceil(this.props.count /10)}
                 style={{
                   display:
-                    Math.ceil(this.props.count / 2) === this.state.currentPage
+                  this.props.count!== "undefined" || Math.ceil(this.props.count /10) === this.state.currentPage
                       ? "none"
                       : "block"
                 }}
@@ -613,7 +631,8 @@ const mapDispatchToProps = (dispatch) => {
         updateExpense: (expense) => dispatch(updateExpense(expense)),
         deleteExpense: (expense) => dispatch(deleteExpense(expense)),
         getAllExpenses: (expense)=>dispatch (getAllExpenses(expense)),
-        getfilterexpense: (expense)=>dispatch(getfilterexpense(expense))
+        getfilterexpense: (expense)=>dispatch(getfilterexpense(expense)),
+        filterexpense: (expense)=> dispatch(filterexpense(expense))
     }
 }
 

@@ -26,6 +26,20 @@ export const getfilterexpense = expense => {
   };
 };
 
+
+
+export const filterexpense = expense => {
+  console.log(expense);
+  return dispatch => {
+    axios
+      .get(`http://127.0.0.1:8000/expense/items/?pk=${expense.sheetId}&items=${expense.value}`)
+      .then(response => {
+        dispatch({ type: "FETCH_FILTER_EXPENSES", payload: response.data });
+      });
+  };
+};
+
+
 export const createExpense = expense => {
   return (dispatch, getState) => {
     axios
