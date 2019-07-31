@@ -23,8 +23,11 @@ const expenseReducer = (state = initState, action) => {
     case "FETCH_EXPENSES":
       return { ...state, data1: action.payload };
 
-    case "FETCH_EXPENSES_FILTER":
+      case "FETCH_ALL_EXPENSES":
       return { ...state, data1: [...action.payload] };
+
+    case "FETCH_EXPENSES_FILTER":
+      return { ...state, data1: action.payload};
 
       case "FETCH_FILTER_EXPENSES":
       return { ...state, data1: action.payload };

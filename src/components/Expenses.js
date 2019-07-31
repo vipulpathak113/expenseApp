@@ -7,6 +7,7 @@ import { deleteExpense } from '../store/actions/expenseAction'
 import {getAllExpenses} from '../store/actions/expenseAction'
 import {getfilterexpense} from '../store/actions/expenseAction'
 import {filterexpense} from '../store/actions/expenseAction' 
+import {allexpense} from '../store/actions/expenseAction' 
 import { connect } from 'react-redux'
 import axios from 'axios'
 
@@ -40,7 +41,7 @@ class Expense extends Component {
         sheetId: '',
         payment:'',
         chckall:true,
-        selectValue:'',
+        selectValue:'all',
         currentPage: 1,
         selectedValue:''
     }
@@ -214,10 +215,10 @@ class Expense extends Component {
         console.log(e.target.value)
         this.setState({selectValue:e.target.value});
         if (e.target.value !== "all") {
-          this.props.getfilterexpense(e.target.value)
+          this.props.getfilterexpense({value:e.target.value,currentPage:1})
         } else {
             var id = window.location.pathname.substring(7, 9)
-            this.props.getAllExpenses({id:id})
+            this.props.allexpense({id:id,currentPage:1})
         }
     }
 
@@ -227,10 +228,10 @@ class Expense extends Component {
 
         if (e.target.value == 10) {
             var id = window.location.pathname.substring(7, 9)
-              this.props.getAllExpenses({id:id,currentPage:1})
+              this.props.allexpense({id:id,currentPage:1})
           } else {
               
-              this.props.filterexpense({sheetId:this.state.sheetId,value:e.target.value})
+              this.props.filterexpense({sheetId:this.state.sheetId,value:e.target.value,selectValue:this.state.selectValue})
           }
 
 
@@ -269,7 +270,7 @@ class Expense extends Component {
     }
 
     clickNext(event) {
-          this.props.getAllExpenses({id:this.state.sheetId,currentPage:Number(event.target.id) + 1})
+          this.props.allexpense({id:this.state.sheetId,currentPage:Number(event.target.id) + 1})
 
         this.setState({
           currentPage: Number(event.target.id) + 1
@@ -284,14 +285,14 @@ class Expense extends Component {
     
       clickPrev(event) {
         console.log(Number(event.target.id) - 1);
-        this.props.getAllExpenses({id:this.state.sheetId,currentPage:Number(event.target.id) - 1})
+        this.props.allexpense({id:this.state.sheetId,currentPage:Number(event.target.id) - 1})
         this.setState({
           currentPage: Number(event.target.id) - 1
         });
       }
     
       clickLast(event) {
-        this.props.getAllExpenses({id:this.state.sheetId,currentPage:Number(event.target.id)})
+        this.props.allexpense({id:this.state.sheetId,currentPage:Number(event.target.id)})
         this.setState({
           currentPage: Number(event.target.id)
         });
@@ -303,7 +304,7 @@ class Expense extends Component {
         this.setState({
             sheetId: id
         })
-        this.props.getAllExpenses({id:id,currentPage:this.state.currentPage})
+        this.props.allexpense({id:id,currentPage:this.state.currentPage})
     }
     render() {
 
@@ -632,7 +633,9 @@ const mapDispatchToProps = (dispatch) => {
         deleteExpense: (expense) => dispatch(deleteExpense(expense)),
         getAllExpenses: (expense)=>dispatch (getAllExpenses(expense)),
         getfilterexpense: (expense)=>dispatch(getfilterexpense(expense)),
-        filterexpense: (expense)=> dispatch(filterexpense(expense))
+        filterexpense: (expense)=> dispatch(filterexpense(expense)),
+        allexpense: (expense)=> dispatch(allexpense(expense)),
+        
     }
 }
 

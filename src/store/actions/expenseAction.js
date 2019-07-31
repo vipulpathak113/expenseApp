@@ -7,7 +7,7 @@ export const getAllExpenses = expense => {
       .get(
         `http://127.0.0.1:8000/expense/compute/?pk=${expense.id}&pageNo=${
           expense.currentPage
-        }`
+        }&filter=${expense.selectValue}`
       )
       .then(response => {
         dispatch({ type: "FETCH_EXPENSES", payload: response.data });
@@ -19,7 +19,7 @@ export const getfilterexpense = expense => {
   console.log(expense);
   return dispatch => {
     axios
-      .get(`http://127.0.0.1:8000/expense/filter/?pk=${expense}`)
+      .get(`http://127.0.0.1:8000/expense/filter/?pk=${expense.value}&pageNo=${expense.currentPage}`)
       .then(response => {
         dispatch({ type: "FETCH_EXPENSES_FILTER", payload: response.data });
       });
@@ -27,12 +27,23 @@ export const getfilterexpense = expense => {
 };
 
 
+export const allexpense = expense => {
+  console.log(expense);
+  return dispatch => {
+    axios
+      .get(`http://127.0.0.1:8000/expense/?pk=${expense.id}&pageNo=${expense.currentPage}`)
+      .then(response => {
+        dispatch({ type: "FETCH_ALL_EXPENSES", payload: response.data });
+      });
+  };
+};
+
 
 export const filterexpense = expense => {
   console.log(expense);
   return dispatch => {
     axios
-      .get(`http://127.0.0.1:8000/expense/items/?pk=${expense.sheetId}&items=${expense.value}`)
+      .get(`http://127.0.0.1:8000/expense/items/?pk=${expense.sheetId}&items=${expense.value}&filter=${expense.selectValue}`)
       .then(response => {
         dispatch({ type: "FETCH_FILTER_EXPENSES", payload: response.data });
       });
@@ -49,12 +60,12 @@ export const createExpense = expense => {
           dispatch({ type: "CREATE_EXPENSE", data: response.data });
           axios
             .get(
-              `http://127.0.0.1:8000/expense/compute/?pk=${
+              `http://127.0.0.1:8000/expense/?pk=${
                 expense.sheetId
               }&pageNo=${expense.currentPage}`
             )
             .then(response => {
-              dispatch({ type: "FETCH_EXPENSES", payload: response.data });
+              dispatch({ type: "FETCH_ALL_EXPENSES", payload: response.data });
             });
 
           axios
@@ -97,7 +108,7 @@ export const updateExpense = expense => {
               }`
             )
             .then(response => {
-              dispatch({ type: "FETCH_EXPENSES", payload: response.data });
+              dispatch({ type: "FETCH_ALL_EXPENSES", payload: response.data });
             });
         }
       })
@@ -118,12 +129,12 @@ export const deleteExpense = expense => {
               dispatch({ type: "DELETE_EXPENSE", data: response.data });
               axios
                 .get(
-                  `http://127.0.0.1:8000/expense/compute/?pk=${
+                  `http://127.0.0.1:8000/expense/?pk=${
                     expense.sheetId
                   }&pageNo=${expense.currentPage}`
                 )
                 .then(response => {
-                  dispatch({ type: "FETCH_EXPENSES", payload: response.data });
+                  dispatch({ type: "FETCH_ALL_EXPENSES", payload: response.data });
                 });
 
               axios
