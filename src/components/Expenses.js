@@ -341,6 +341,21 @@ class Expense extends Component {
                  <option value={item} >{item}</option>
                  ) })}
                 </select>
+
+
+                <span>Rows </span>
+            <select className="mdb-select md-form"
+                    value={this.state.selectValue}
+                    onChange={this.handleSelection.bind(this)}
+                    style={{"margin-right": "24px"}}
+                    >
+                    <option value="10" >10</option>
+                    <option value="25" >25</option>
+                    <option value="50" >50</option>
+                    <option value="100" >100</option>
+                    <option value="500" >500</option>
+           
+                </select>
                
 
                 <div className="pagination-items" style={{"display": "inline-flex"}}> 
