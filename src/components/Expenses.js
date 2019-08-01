@@ -411,7 +411,7 @@ class Expense extends Component {
                 Previous
               </button>
           <p className="pagecount">Showing page {this.state.currentPage} of{" "}
-          {this.props.count>10 && this.props.count>this.state.selectValue?Math.ceil(this.props.count /10):1} </p>
+          {this.props.count>10 && (this.props.count>this.state.selectedValue)?Math.ceil(this.props.count /10):1} </p>
               <button
                 type="button"
                 id={this.state.currentPage}
