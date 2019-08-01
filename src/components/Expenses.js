@@ -43,7 +43,7 @@ class Expense extends Component {
         chckall:true,
         selectValue:'all',
         currentPage: 1,
-        selectedValue:''
+        selectedValue:10,
     }
 }
 
@@ -217,9 +217,15 @@ class Expense extends Component {
         this.setState({selectValue:e.target.value});
         if (e.target.value !== "all") {
           this.props.getfilterexpense({sheetId:this.state.sheetId,value:e.target.value,currentPage:1})
+          this.setState({
+            selectedValue:10
+        })
         } else {
             var id = window.location.pathname.substring(7, 9)
             this.props.allexpense({id:id,currentPage:1})
+            this.setState({
+                selectedValue:10
+            })
         }
     }
 
@@ -405,13 +411,13 @@ class Expense extends Component {
                 Previous
               </button>
           <p className="pagecount">Showing page {this.state.currentPage} of{" "}
-          {this.props.count>10?Math.ceil(this.props.count /10):1} </p>
+          {this.props.count>10 && this.props.count>this.state.selectValue?Math.ceil(this.props.count /10):1} </p>
               <button
                 type="button"
                 id={this.state.currentPage}
                 style={{
                   display:
-                  Math.ceil(this.props.count /10) > this.state.currentPage
+                  Math.ceil(this.props.count /10) > this.state.currentPage && this.props.count> this.state.selectedValue
                       ? "block"
                       : "none"
                 }}
@@ -425,7 +431,7 @@ class Expense extends Component {
                 id={Math.ceil(this.props.count /10)}
                 style={{
                   display:
-                  this.props.count== "undefined" || Math.ceil(this.props.count /10) === this.state.currentPage
+                  this.props.count== "undefined" || Math.ceil(this.props.count /10) === this.state.currentPage || this.props.count< this.state.selectedValue
                       ? "none"
                       : "block"
                 }}
