@@ -5,6 +5,7 @@ import { updateSheet } from "../store/actions/sheetAction";
 import { getPayments } from "../store/actions/sheetAction";
 import { getSheets } from "../store/actions/sheetAction";
 import { connect } from "react-redux";
+import DraggableModalDialog from "./Draggable";
 
 class Sheets extends Component {
   constructor(props) {
@@ -111,7 +112,11 @@ class Sheets extends Component {
           </b>
         </div>
 
-        <Modal show={this.state.editModal} onHide={this.editclose.bind(this)}>
+        <Modal
+          dialogAs={DraggableModalDialog}
+          show={this.state.editModal}
+          onHide={this.editclose.bind(this)}
+        >
           <Modal.Header closeButton className="modalheader">
             <Modal.Title>Edit Sheet</Modal.Title>
           </Modal.Header>

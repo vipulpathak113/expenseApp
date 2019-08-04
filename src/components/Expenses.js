@@ -11,6 +11,7 @@ import {allexpense} from '../store/actions/expenseAction'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import $ from 'jquery';
+import DraggableModalDialog from './Draggable'
 
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -513,7 +514,7 @@ class Expense extends Component {
 
                 <div>
 
-                    <Modal show={this.state.showModal} onHide={this.close.bind(this)} className="handle" >
+                    <Modal dialogAs={DraggableModalDialog} show={this.state.showModal} onHide={this.close.bind(this)} className="handle" >
                         <Modal.Header closeButton className="modalheader">
                             <Modal.Title>New Expense</Modal.Title>
                         </Modal.Header>
@@ -572,7 +573,7 @@ class Expense extends Component {
                     </Modal>
 
 
-                    <Modal show={this.state.showModalSave} onHide={this.Sclose.bind(this)} className="handle" >
+                    <Modal dialogAs={DraggableModalDialog} show={this.state.showModalSave} onHide={this.Sclose.bind(this)} className="handle" >
                         <Modal.Header closeButton className="modalheader">
                             <Modal.Title>Edit Expense</Modal.Title>
                         </Modal.Header>

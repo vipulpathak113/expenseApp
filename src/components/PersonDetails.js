@@ -12,16 +12,7 @@ import axios from 'axios'
 import Sheets from './Sheets'
 import Compute from './Compute'
 import $ from 'jquery';
-import Draggable from 'react-draggable';
-import ModalDialog from 'react-bootstrap/ModalDialog';
-
-
-class DraggableModalDialog extends React.Component {
-	render() {
-		return <Draggable handle=".modalheader"><ModalDialog {...this.props} /></Draggable>
-	}
-}
-
+import DraggableModalDialog from './Draggable'
 
 class PersonDetails extends Component {
 
@@ -407,7 +398,7 @@ class PersonDetails extends Component {
                         </Modal.Footer>
                     </Modal>
 
-                    <Modal show={this.state.showModalSave} onHide={this.Sclose.bind(this)}>
+                    <Modal dialogAs={DraggableModalDialog} show={this.state.showModalSave} onHide={this.Sclose.bind(this)}>
                         <Modal.Header closeButton className="modalheader">
                             <Modal.Title>Edit Person</Modal.Title>
                         </Modal.Header>
