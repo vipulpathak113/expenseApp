@@ -228,3 +228,32 @@ a {
   font-weight: 600;
   font-size: small;
 }
+
+.modal-title {
+  margin-bottom: 8px;
+  line-height: 1.5;
+  font-size: 14px;
+  color: white;
+}
+
+.modalheader {
+  padding-top: 7px;
+  border-bottom-width: 0px;
+  padding-bottom: 0px;
+  background-color: royalblue;
+  cursor: move;
+}
+
+.modal-content {
+  border: 0px;
+}
+
+.modal-footer {
+  padding-bottom: 6px;
+  padding-top: 6px;
+  border-top-width: 0px;
+}
+
+.modal.show .modal-dialog {
+  width: 451px;
+}

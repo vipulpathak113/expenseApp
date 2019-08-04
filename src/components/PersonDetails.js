@@ -11,7 +11,16 @@ import Expense from './Expenses'
 import axios from 'axios'
 import Sheets from './Sheets'
 import Compute from './Compute'
+import $ from 'jquery';
+import Draggable from 'react-draggable';
+import ModalDialog from 'react-bootstrap/ModalDialog';
 
+
+class DraggableModalDialog extends React.Component {
+	render() {
+		return <Draggable handle=".modalheader"><ModalDialog {...this.props} /></Draggable>
+	}
+}
 
 
 class PersonDetails extends Component {
@@ -118,6 +127,8 @@ class PersonDetails extends Component {
         else{
             this.props.deletePerson({items:this.state.items,sheetId: this.state.sheetId} );
         }}
+
+        $('input[name=delchck]').prop('checked', false);
     }
 
     handleChange = (e) => {
@@ -127,11 +138,15 @@ class PersonDetails extends Component {
     }
 
     close() {
-        this.setState({ showModal: false });
+        this.setState({ showModal: false,name: '',
+        nickname: '',
+        comment: '', });
     }
 
     Sclose() {
-        this.setState({ showModalSave: false });
+        this.setState({ showModalSave: false,name: '',
+        nickname: '',
+        comment: '', });
     }
 
    
@@ -289,7 +304,7 @@ class PersonDetails extends Component {
         return (
             <tr key={item.id}>
                 <td><center>
-                    <input type="checkbox" id="check" value={id} onChange={this.onToggle.bind(this)} className="selectCheckbox" />
+                    <input type="checkbox" id="check" value={id} onChange={this.onToggle.bind(this)} className="selectCheckbox" name="delchck" />
                     <button onClick={this.editMode.bind(this, id)}>Edit</button>
                 </center>
                 </td>
@@ -353,7 +368,7 @@ class PersonDetails extends Component {
                 <div>
 
 
-                    <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
+                    <Modal dialogAs={DraggableModalDialog}  show={this.state.showModal} onHide={this.close.bind(this)}>
                         <Modal.Header closeButton className="modalheader">
                             <Modal.Title>New Person</Modal.Title>
                         </Modal.Header>
@@ -394,7 +409,7 @@ class PersonDetails extends Component {
 
                     <Modal show={this.state.showModalSave} onHide={this.Sclose.bind(this)}>
                         <Modal.Header closeButton className="modalheader">
-                            <Modal.Title>Save Person</Modal.Title>
+                            <Modal.Title>Edit Person</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <div><span>Person Name</span> 
@@ -431,6 +446,7 @@ class PersonDetails extends Component {
     }
 }
 const mapStateToProps = (state, ownProps) => {
+    console.log(state)
     return {
         personError: state.person.personError,
         persons: state.person.data,

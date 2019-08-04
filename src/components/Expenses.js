@@ -10,6 +10,7 @@ import {filterexpense} from '../store/actions/expenseAction'
 import {allexpense} from '../store/actions/expenseAction' 
 import { connect } from 'react-redux'
 import axios from 'axios'
+import $ from 'jquery';
 
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -56,18 +57,18 @@ class Expense extends Component {
     };
 
     onToggle(e) {
+ 
         const paidTo = this.state.paidTo
         let index
         if (e.target.checked) {
 
             paidTo.push(this.props.persons[e.target.value].nickname)
         } else {
-
-            index = paidTo.indexOf(+e.target.value)
+            index = paidTo.indexOf(this.props.persons[e.target.value].nickname)
             paidTo.splice(index, 1)
         }
         this.setState({ paidTo: paidTo })
-
+        console.log(this.state.paidTo)
     }
 
     changeDate(date) {
@@ -83,7 +84,7 @@ class Expense extends Component {
     }
 
     Sclose() {
-        this.setState({ showModalSave: false });
+        this.setState({ showModalSave: false,paidTo:[] });
     }
     saveOpen() {
         this.setState({ showModalSave: true });
@@ -115,7 +116,7 @@ class Expense extends Component {
     }
 
     close() {
-        this.setState({ showModal: false });
+        this.setState({ showModal: false,paidTo:[] });
     }
 
     saveAndNew(e) {
@@ -137,10 +138,12 @@ class Expense extends Component {
             date: new Date(),
             amount: '',
             paidBy: '',
-            paidTo: [],
+            paidTo: '',
             selectedRadio: 0,
             isPayment: false
         })
+
+        $('input[name=expWho]').prop('checked', false);
 
     }
 
@@ -154,6 +157,10 @@ class Expense extends Component {
                 isPayment: true,
             });
         }
+
+        $('input[name=delchck]').prop('checked', false);
+
+        
     }
 
 
@@ -431,7 +438,7 @@ class Expense extends Component {
                 id={Math.ceil(this.props.count /10)}
                 style={{
                   display:
-                  this.props.count== "undefined" || Math.ceil(this.props.count /10) === this.state.currentPage || this.props.count< this.state.selectedValue
+                  this.props.count=== undefined || Math.ceil(this.props.count /10) === this.state.currentPage || this.props.count< this.state.selectedValue
                       ? "none"
                       : "block"
                 }}
@@ -461,7 +468,7 @@ class Expense extends Component {
                             return (
                                 <tr key={item.id}>
                                     <td>
-                                        <input type="checkbox" value={id} onChange={this.onToggleEdit.bind(this)} className="selectCheckboxDel" />
+                                        <input type="checkbox" value={id} onChange={this.onToggleEdit.bind(this)} className="selectCheckboxDel" name="delchck" />
                                         <button onClick={this.editMode.bind(this, id)}>Edit</button></td>
                                     <td><center className="dateexp">{new Date(Date.parse(item[0])).toDateString().substring(3, 18)}</center></td>
                                     <td><center>{item[1]}</center></td>
@@ -506,7 +513,7 @@ class Expense extends Component {
 
                 <div>
 
-                    <Modal show={this.state.showModal} onHide={this.props.close.bind(this)} className="handle" >
+                    <Modal show={this.state.showModal} onHide={this.close.bind(this)} className="handle" >
                         <Modal.Header closeButton className="modalheader">
                             <Modal.Title>New Expense</Modal.Title>
                         </Modal.Header>
@@ -543,6 +550,7 @@ class Expense extends Component {
                                         <span className="paidradio">
                                             <input type="checkbox"
                                                 value={id}
+                                                name="expWho"
                                                 onChange={this.onToggle.bind(this)}
                                                 style={{ 'margin-left': '10px' }} /> {item.nickname}
                                         </span>
@@ -566,7 +574,7 @@ class Expense extends Component {
 
                     <Modal show={this.state.showModalSave} onHide={this.Sclose.bind(this)} className="handle" >
                         <Modal.Header closeButton className="modalheader">
-                            <Modal.Title>New Expense</Modal.Title>
+                            <Modal.Title>Edit Expense</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <div><span className="date">Date </span><DatePicker
