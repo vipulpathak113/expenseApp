@@ -5,6 +5,7 @@ import { createPerson } from '../store/actions/addPersonAction'
 import { updatePerson } from '../store/actions/addPersonAction'
 import { deletePerson } from '../store/actions/addPersonAction'
 import {getAllPersons} from '../store/actions/addPersonAction'
+import {getAllPayment} from '../store/actions/paymentAction'
 import { updateSheet } from '../store/actions/sheetAction'
 import { Tab, Tabs } from 'react-bootstrap';
 import Expense from './Expenses'
@@ -92,6 +93,12 @@ class PersonDetails extends Component {
         this.setState({
             key: value,
         });
+
+        if(value==="payment"){
+
+            this.props.getAllPayment({expenses:this.props.expenses, persons: this.props.persons1})
+
+        }
     }
 
     deleteSelected() {
@@ -346,7 +353,7 @@ class PersonDetails extends Component {
                             close={this.close} 
                             handleChange={this.handleChange}
                             persons={this.props.persons1}
-                            handleSelect={this.handleSelect}
+                            handleSelect={this.handleSelect.bind(this)}
                             isComputeDisabled={this.state.isComputeDisabled}
                             />
                     </Tab>
@@ -442,6 +449,7 @@ const mapStateToProps = (state, ownProps) => {
         personError: state.person.personError,
         persons: state.person.data,
         persons1: state.person.data1,
+        expenses:state.expense.data1.expenses
     }
 }
 
@@ -451,7 +459,8 @@ const mapDispatchToProps = (dispatch) => {
         updatePerson: (person) => dispatch(updatePerson(person)),
         deletePerson: (person) => dispatch(deletePerson(person)),
         getAllPersons: (id) => dispatch(getAllPersons(id)),
-        updateSheet: (sheet) => dispatch(updateSheet(sheet))
+        updateSheet: (sheet) => dispatch(updateSheet(sheet)),
+        getAllPayment: (payment)=>dispatch(getAllPayment(payment))
     }
 }
 

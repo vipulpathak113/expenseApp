@@ -497,7 +497,7 @@ class Expense extends Component {
                         variant="primary"
                         size="sm"
                         disabled={this.props.isComputeDisabled}
-                        onClick={() => this.props.handleSelect("payment").bind(this)}
+                        onClick={() => this.props.handleSelect("payment")}
                         className="perEx">Compute Payments</Button>
 
                     <Button
