@@ -45,6 +45,7 @@ class Expense extends Component {
         selectValue:'all',
         currentPage: 1,
         selectedValue:10,
+        nonevensplit:false
     }
 }
 
@@ -68,7 +69,6 @@ class Expense extends Component {
             paidTo.splice(index, 1)
         }
         this.setState({ paidTo: paidTo })
-        console.log(this.state.paidTo)
     }
 
     changeDate(date) {
@@ -220,7 +220,6 @@ class Expense extends Component {
     }
 
     handleSelection(e){
-        console.log(e.target.value)
         this.setState({selectValue:e.target.value});
         if (e.target.value !== "all") {
           this.props.getfilterexpense({sheetId:this.state.sheetId,value:e.target.value,currentPage:1})
@@ -237,7 +236,6 @@ class Expense extends Component {
     }
 
     filterSelection(e){
-        console.log(e.target.value)
         this.setState({selectedValue:e.target.value});
 
         if (e.target.value === 10) {
@@ -249,8 +247,6 @@ class Expense extends Component {
               this.props.filterexpense({sheetId:this.state.sheetId,value:e.target.value,selectValue:this.state.selectValue})
           }
 
-
-        
     }
 
     onToggleAll(ele) {
@@ -299,7 +295,6 @@ class Expense extends Component {
       }
     
       clickPrev(event) {
-        console.log(Number(event.target.id) - 1);
         this.props.allexpense({id:this.state.sheetId,currentPage:Number(event.target.id) - 1})
         this.setState({
           currentPage: Number(event.target.id) - 1
@@ -552,10 +547,12 @@ class Expense extends Component {
                                                 value={id}
                                                 name="expWho"
                                                 onChange={this.onToggle.bind(this)}
-                                                style={{ 'margin-left': '10px' }} /> {item.nickname}
+                                                style={{ 'margin-left': '10px' }}
+                                                disabled={this.state.nonevensplit} /> {item.nickname}
                                         </span>
                                     )
                                 })}
+                                <span onClick={this.nonEvenSplit.bind(this)}>non-even split</span>
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
@@ -635,7 +632,6 @@ class Expense extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-    console.log(state)
     return {
         expenses: state.expense.data1.expenses,
         count: state.expense.data1.count

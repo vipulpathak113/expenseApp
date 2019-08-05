@@ -232,7 +232,6 @@ class PersonDetails extends Component {
             axios.get(`http://127.0.0.1:8000/expense/?pk=${id}&pageNo=1`)
             .then(res => {
                 if (res.status === 200) {
-                    console.log(res)
                     this.setState({ expenses: res.data.expenses });
                 }
             })
@@ -444,7 +443,6 @@ class PersonDetails extends Component {
     }
 }
 const mapStateToProps = (state, ownProps) => {
-    console.log(state)
     return {
         personError: state.person.personError,
         persons: state.person.data,

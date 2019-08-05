@@ -1,7 +1,6 @@
-import thunk from 'redux-thunk'
-import { createStore, applyMiddleware} from 'redux'
-import rootReducer from './reducers/rootReducer'
-
+import thunk from "redux-thunk";
+import { createStore, applyMiddleware } from "redux";
+import rootReducer from "./reducers/rootReducer";
 
 // function saveToLocalStorage(state){
 //     try{
@@ -27,10 +26,11 @@ import rootReducer from './reducers/rootReducer'
 // const persistedState=loadFromLocalStorage()
 const middleware = applyMiddleware(thunk);
 const store = createStore(
-    // rootReducer, persistedState,composeEnhancers(middleware),
-    rootReducer,middleware
-)
+  // rootReducer, persistedState,composeEnhancers(middleware),
+  rootReducer,
+  middleware
+);
 
 // store.subscribe(()=>saveToLocalStorage(store.getState()))
 
-export default store
+export default store;

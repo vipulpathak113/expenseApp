@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const getAllExpenses = expense => {
-  console.log(expense);
   return dispatch => {
     axios
       .get(
@@ -16,7 +15,6 @@ export const getAllExpenses = expense => {
 };
 
 export const getfilterexpense = expense => {
-  console.log(expense);
   return dispatch => {
     axios
       .get(
@@ -31,7 +29,6 @@ export const getfilterexpense = expense => {
 };
 
 export const allexpense = expense => {
-  console.log(expense);
   return dispatch => {
     axios
       .get(
@@ -46,7 +43,6 @@ export const allexpense = expense => {
 };
 
 export const filterexpense = expense => {
-  console.log(expense);
   return dispatch => {
     axios
       .get(
