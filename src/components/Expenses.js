@@ -45,7 +45,7 @@ class Expense extends Component {
         selectValue:'all',
         currentPage: 1,
         selectedValue:10,
-        nonevensplit:false
+        nonevensplit:''
     }
 }
 
@@ -247,6 +247,12 @@ class Expense extends Component {
               this.props.filterexpense({sheetId:this.state.sheetId,value:e.target.value,selectValue:this.state.selectValue})
           }
 
+    }
+
+    nonEvenSplit(){
+        this.setState({
+            nonevensplit:'none'
+        })
     }
 
     onToggleAll(ele) {
@@ -542,13 +548,13 @@ class Expense extends Component {
                             <div className="divPaid"><span className="expWho">For Whom?</span>
                                 {this.props.persons && this.props.persons.map((item, id) => {
                                     return (
-                                        <span className="paidradio">
+                                        <span className="paidradio" style={{display:this.state.nonevensplit}} >
                                             <input type="checkbox"
                                                 value={id}
                                                 name="expWho"
                                                 onChange={this.onToggle.bind(this)}
                                                 style={{ 'margin-left': '10px' }}
-                                                disabled={this.state.nonevensplit} /> {item.nickname}
+                                                /> {item.nickname}
                                         </span>
                                     )
                                 })}
