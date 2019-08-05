@@ -9,7 +9,6 @@ import {getfilterexpense} from '../store/actions/expenseAction'
 import {filterexpense} from '../store/actions/expenseAction' 
 import {allexpense} from '../store/actions/expenseAction' 
 import { connect } from 'react-redux'
-import axios from 'axios'
 import $ from 'jquery';
 import DraggableModalDialog from './Draggable'
 
@@ -241,7 +240,7 @@ class Expense extends Component {
         console.log(e.target.value)
         this.setState({selectedValue:e.target.value});
 
-        if (e.target.value == 10) {
+        if (e.target.value === 10) {
             var id = window.location.pathname.substring(7, 9)
               this.props.allexpense({id:id,currentPage:1})
               this.setState({currentPage:1});
@@ -261,7 +260,7 @@ class Expense extends Component {
         var checkboxes = document.getElementsByTagName('input');
         if (ele.target.checked) {
             for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].type == 'checkbox') {
+                if (checkboxes[i].type === 'checkbox') {
                     checkboxes[i].checked = true;
                 }
             }
@@ -272,9 +271,9 @@ class Expense extends Component {
                 })
 
         } else {
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].type == 'checkbox') {
-                    checkboxes[i].checked = false;
+            for (var j = 0; j < checkboxes.length; j++) {
+                if (checkboxes[j].type === 'checkbox') {
+                    checkboxes[j].checked = false;
                 }
             }
             items.splice(expenses.map(item=>item[5]), 1)

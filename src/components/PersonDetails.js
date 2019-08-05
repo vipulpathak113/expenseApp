@@ -64,7 +64,7 @@ class PersonDetails extends Component {
         var checkboxes = document.getElementsByTagName('input');
         if (ele.target.checked) {
             for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].type == 'checkbox') {
+                if (checkboxes[i].type === 'checkbox') {
                     checkboxes[i].checked = true;
                 }
             }
@@ -75,9 +75,9 @@ class PersonDetails extends Component {
                 })
 
         } else {
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].type == 'checkbox') {
-                    checkboxes[i].checked = false;
+            for (var j = 0; j < checkboxes.length; j++) {
+                if (checkboxes[j].type === 'checkbox') {
+                    checkboxes[j].checked = false;
                 }
             }
             items.splice(persons.map(item=>item.id), 1)
@@ -100,9 +100,9 @@ class PersonDetails extends Component {
             if(this.state.expenses){
          var items= this.state.items
        items&& items.map(pol=>{
-        var pname= this.props.persons1.filter(item=>item.id==pol)[0].nickname
-        var expp= this.state.expenses.filter(item=>item[2]==pname || item[4].includes(pname)).length
-        if(expp!=0){
+        var pname= this.props.persons1.filter(item=>item.id===pol)[0].nickname
+        var expp= this.state.expenses.filter(item=>item[2]===pname || item[4].includes(pname)).length
+        if(expp!==0){
         alert("Cannot delete person as involved in transaction")
         }
         else{
