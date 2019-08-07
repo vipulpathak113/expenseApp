@@ -45,7 +45,7 @@ class Expense extends Component {
         selectValue:'all',
         currentPage: 1,
         selectedValue:10,
-        nonevensplit:''
+        nonevensplit:'',
     }
 }
 
@@ -58,11 +58,17 @@ class Expense extends Component {
     };
 
     onToggle(e) {
+        
  
         const paidTo = this.state.paidTo
         let index
         if (e.target.checked) {
-
+            var idval = e.target.id;
+            console.log(idval);
+            var stateUpdate = {};
+            stateUpdate[idval] = e.target.value;
+            console.log(stateUpdate[idval])
+            this.setState(stateUpdate);
             paidTo.push(this.props.persons[e.target.value].nickname)
         } else {
             index = paidTo.indexOf(this.props.persons[e.target.value].nickname)
@@ -81,6 +87,14 @@ class Expense extends Component {
         this.setState({
             [e.target.id]: e.target.value
         })
+    }
+
+    handleChange1 = (event) => {
+        var idval = event.target.id;
+  console.log(idval);
+  var stateUpdate = {};
+  stateUpdate[idval] = event.target.value;
+  this.setState(stateUpdate);
     }
 
     Sclose() {
@@ -117,6 +131,11 @@ class Expense extends Component {
 
     close() {
         this.setState({ showModal: false,paidTo:[] });
+    }
+
+    open() {
+        this.setState({ showModal: true });
+        $('.quantity').hide();
     }
 
     saveAndNew(e) {
@@ -159,8 +178,6 @@ class Expense extends Component {
         }
 
         $('input[name=delchck]').prop('checked', false);
-
-        
     }
 
 
@@ -490,7 +507,7 @@ class Expense extends Component {
                     <Button
                         variant="primary"
                         size="sm"
-                        onClick={this.props.open.bind(this)}
+                        onClick={this.open.bind(this)}
                         className="perEx"
                     >
                         Add Expense</Button>
@@ -554,11 +571,11 @@ class Expense extends Component {
                                                 name="expWho"
                                                 onChange={this.onToggle.bind(this)}
                                                 style={{ 'margin-left': '10px' }}
-                                                /> {item.nickname}
+                                                /> {item.nickname} <input type="text" id={id} onChange= {this.onToggle.bind(this)} value={this.state.stateUpdate} style={{width: "30px"}} className="quantity" />
                                         </span>
                                     )
                                 })}
-                                <span onClick={this.nonEvenSplit.bind(this)}>non-even split</span>
+                                {/* <span onClick={this.nonEvenSplit.bind(this)}>non-even split</span> */}
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
