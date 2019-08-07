@@ -14,6 +14,7 @@ import DraggableModalDialog from './Draggable'
 
 
 import "react-datepicker/dist/react-datepicker.css";
+import { conditionalExpression } from '@babel/types';
 
 // var value = new Date().toISOString();
 
@@ -46,6 +47,7 @@ class Expense extends Component {
         currentPage: 1,
         selectedValue:10,
         nonevensplit:'',
+        quant:''
     }
 }
 
@@ -59,22 +61,19 @@ class Expense extends Component {
 
     onToggle(e) {
         
- 
         const paidTo = this.state.paidTo
         let index
         if (e.target.checked) {
-            var idval = e.target.id;
-            console.log(idval);
-            var stateUpdate = {};
-            stateUpdate[idval] = e.target.value;
-            console.log(stateUpdate[idval])
-            this.setState(stateUpdate);
+            console.log(e.target.id)
+            $(`.inpt${e.target.value}`).show();
             paidTo.push(this.props.persons[e.target.value].nickname)
         } else {
             index = paidTo.indexOf(this.props.persons[e.target.value].nickname)
             paidTo.splice(index, 1)
+            $(`.inpt${e.target.value}`).hide();
         }
         this.setState({ paidTo: paidTo })
+        console.log(this.state.paidTo)
     }
 
     changeDate(date) {
@@ -89,12 +88,16 @@ class Expense extends Component {
         })
     }
 
-    handleChange1 = (event) => {
-        var idval = event.target.id;
-  console.log(idval);
-  var stateUpdate = {};
-  stateUpdate[idval] = event.target.value;
-  this.setState(stateUpdate);
+    handleChange1 = (e) => {
+        var stateUpdate = {};
+        stateUpdate[e.target.id] = e.target.value;
+        console.log(stateUpdate[e.target.id])
+        this.setState(stateUpdate);
+        console.log(this.state.stateUpdate)
+        const newIds = this.state.paidTo.slice() //copy the array
+        newIds[e.target.id] = stateUpdate[e.target.id]+this.state.paidTo[e.target.id]//execute the manipulations
+        this.setState({paidTo: newIds}) //set the new state
+        console.log(this.state.paidTo)       
     }
 
     Sclose() {
@@ -134,8 +137,7 @@ class Expense extends Component {
     }
 
     open() {
-        this.setState({ showModal: true });
-        $('.quantity').hide();
+        this.setState({ showModal: true,quant:'none' });
     }
 
     saveAndNew(e) {
@@ -340,7 +342,6 @@ class Expense extends Component {
         this.props.allexpense({id:id,currentPage:this.state.currentPage})
     }
     render() {
-
         this.interval = setInterval(() => {
             if (this.props.expenses && this.props.expenses.length >= 1) {
                 if (this.state.isPayment) {
@@ -567,11 +568,19 @@ class Expense extends Component {
                                     return (
                                         <span className="paidradio" style={{display:this.state.nonevensplit}} >
                                             <input type="checkbox"
+                                            id={id}
                                                 value={id}
                                                 name="expWho"
                                                 onChange={this.onToggle.bind(this)}
                                                 style={{ 'margin-left': '10px' }}
-                                                /> {item.nickname} <input type="text" id={id} onChange= {this.onToggle.bind(this)} value={this.state.stateUpdate} style={{width: "30px"}} className="quantity" />
+                                                /> {item.nickname} 
+                                        <input type="text"
+                                         id={id} 
+                                         onChange= {this.handleChange1.bind(this)}
+                                         value={this.state.stateUpdate}
+                                         style={{width: "30px",display:'none'}}
+                                         className={`inpt${id}`}
+                                         name={`inpt${id}`}/>
                                         </span>
                                     )
                                 })}
