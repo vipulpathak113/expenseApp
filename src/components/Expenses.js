@@ -65,8 +65,8 @@ class Expense extends Component {
         let index
         if (e.target.checked) {
             console.log(e.target.id)
-            $(`.inpt${e.target.value}`).show();
             paidTo.push(this.props.persons[e.target.value].nickname)
+            $(`.inpt${e.target.value}`).show();
         } else {
             index = paidTo.indexOf(this.props.persons[e.target.value].nickname)
             paidTo.splice(index, 1)
@@ -101,7 +101,12 @@ class Expense extends Component {
     }
 
     Sclose() {
-        this.setState({ showModalSave: false,paidTo:[] });
+        this.setState({ showModalSave: false,paidTo:[],description: '',
+        date: new Date(),
+        amount: '',
+        paidBy: '',
+        paidTo: '',
+        selectedRadio: 0 });
     }
     saveOpen() {
         this.setState({ showModalSave: true });
@@ -133,7 +138,12 @@ class Expense extends Component {
     }
 
     close() {
-        this.setState({ showModal: false,paidTo:[] });
+        this.setState({ showModal: false,paidTo:[],description: '',
+        date: new Date(),
+        amount: '',
+        paidBy: '',
+        paidTo: '',
+        selectedRadio: 0 });
     }
 
     open() {
@@ -194,7 +204,19 @@ class Expense extends Component {
             amount: data[3],
             expenseId: data[5]
         });
+
+        
+        var test= data[4];
+        console.log(test)
+         test.map(item=>{
+             console.log($(`#${item}`).is(':checked'))
+          if(document.getElementById(`${item}`).checked==false){
+            document.getElementById(`${item}`).checked=true
+          }
+         })
     }
+
+    
 
     saveClose(e) {
         if(this.state.amount)
@@ -568,7 +590,7 @@ class Expense extends Component {
                                     return (
                                         <span className="paidradio" style={{display:this.state.nonevensplit}} >
                                             <input type="checkbox"
-                                            id={id}
+                                            id={item.nickname}
                                                 value={id}
                                                 name="expWho"
                                                 onChange={this.onToggle.bind(this)}
@@ -576,7 +598,7 @@ class Expense extends Component {
                                                 /> {item.nickname} 
                                         <input type="text"
                                          id={id} 
-                                         onChange= {this.handleChange1.bind(this)}
+                                         onBlur= {this.handleChange1.bind(this)}
                                          value={this.state.stateUpdate}
                                          style={{width: "30px",display:'none'}}
                                          className={`inpt${id}`}
@@ -635,7 +657,14 @@ class Expense extends Component {
                                 {this.props.persons && this.props.persons.map((item, id) => {
                                     return (
                                         <span className="paidradio">
-                                            <input type="checkbox" value={id} onChange={this.onToggle.bind(this)} /> {item.nickname}
+                                            <input type="checkbox" id={item.nickname} value={id} onChange={this.onToggle.bind(this)} /> {item.nickname}
+                                            <input type="text"
+                                         id={id} 
+                                         onBlur= {this.handleChange1.bind(this)}
+                                         value={this.state.stateUpdate}
+                                         style={{width: "30px",display:'none'}}
+                                         className={`inpt${id}`}
+                                         name={`inpt${id}`}/>
                                         </span>
                                     )
                                 })}
