@@ -135,6 +135,7 @@ class Expense extends Component {
             selectedRadio: 0,
             isPayment: false
         })
+        $('input[name=expWho]').prop('checked', false);
     }
 
     close() {
@@ -169,7 +170,7 @@ class Expense extends Component {
             date: new Date(),
             amount: '',
             paidBy: '',
-            paidTo: '',
+            paidTo: [],
             selectedRadio: 0,
             isPayment: false
         })
@@ -205,14 +206,17 @@ class Expense extends Component {
             expenseId: data[5]
         });
 
-        
+     
         var test= data[4];
         console.log(test)
          test.map(item=>{
-             console.log($(`#${item}`).is(':checked'))
-          if(document.getElementById(`${item}`).checked==false){
-            document.getElementById(`${item}`).checked=true
-          }
+          $(document).ready(function() {
+             if(document.getElementById(`${item}`).checked==false){
+                document.getElementById(`${item}`).checked=true;
+                $(`.inpt${document.getElementById(`${item}`).value}`).show();
+             }
+            }
+        )
          })
     }
 
