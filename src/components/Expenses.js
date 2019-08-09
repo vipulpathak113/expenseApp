@@ -65,13 +65,12 @@ class Expense extends Component {
         let index
         if (e.target.checked) {
             paidTo.push(this.props.persons[e.target.value].nickname)
-            $(`.inpt${e.target.value}`).show();
         } else {
             index = paidTo.indexOf(this.props.persons[e.target.value].nickname)
             paidTo.splice(index, 1)
-            $(`.inpt${e.target.value}`).hide();
         }
         this.setState({ paidTo: paidTo })
+        console.log(this.state.paidTo) 
     }
 
     changeDate(date) {
@@ -90,9 +89,11 @@ class Expense extends Component {
         var stateUpdate = {};
         stateUpdate[e.target.id] = e.target.value;
         this.setState(stateUpdate);
-        const newIds = this.state.paidTo.slice() //copy the array
-        newIds[e.target.id] = this.props.persons[e.target.id].nickname+"-"+e.target.value//execute the manipulations
-        this.setState({paidTo: newIds}) //set the new state       
+        const newIds = this.state.paidTo.slice()
+        console.log(stateUpdate) 
+        newIds[e.target.id] = this.props.persons[e.target.id].nickname+"-"+e.target.value
+        this.setState({paidTo: newIds})  
+        console.log(this.state.paidTo)  
     }
 
     Sclose() {
@@ -101,7 +102,8 @@ class Expense extends Component {
         amount: '',
         paidBy: '',
         paidTo: [],
-        selectedRadio: 0 });
+        selectedRadio: 0,
+        stateUpdate:'' });
     }
     saveOpen() {
         this.setState({ showModalSave: true });
@@ -128,7 +130,7 @@ class Expense extends Component {
             paidBy: '',
             paidTo: [],
             selectedRadio: 0,
-            isPayment: false
+            isPayment: false,
         })
         $('input[name=expWho]').prop('checked', false);
     }
@@ -139,7 +141,7 @@ class Expense extends Component {
         amount: '',
         paidBy: '',
         paidTo: [],
-        selectedRadio: 0 });
+        selectedRadio: 0,stateUpdate:'' });
     }
 
     open() {
@@ -167,7 +169,7 @@ class Expense extends Component {
             paidBy: '',
             paidTo: [],
             selectedRadio: 0,
-            isPayment: false
+            isPayment: false,
         })
 
         $('input[name=expWho]').prop('checked', false);
@@ -597,13 +599,18 @@ class Expense extends Component {
                                                 onChange={this.onToggle.bind(this)}
                                                 style={{ 'margin-left': '10px' }}
                                                 /> {item.nickname} 
-                                        <input type="text"
-                                         id={id} 
-                                         onChange= {this.handleChange1.bind(this)}
-                                         value={this.state.stateUpdate}
-                                         style={{width: "30px",display:'none'}}
-                                         className={`inpt${id}`}
-                                         name={`inpt${id}`}/>
+                                                {
+                                                    this.state.paidTo.some( res => res.includes(item.nickname)) ?
+                                                    <input type="text"
+                                                        id={id} 
+                                                        onBlur= {this.handleChange1.bind(this)}
+                                                        value={this.state.stateUpdate}
+                                                        style={{width: "30px"}}
+                                                        className={`inpt${id}`}
+                                                        name={`inpt${id}`}/> : null
+     
+                                                }
+
                                         </span>
                                     )
                                 })}
@@ -700,6 +707,7 @@ class Expense extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
+    console.log(state)
     return {
         expenses: state.expense.data1.expenses,
         count: state.expense.data1.count
