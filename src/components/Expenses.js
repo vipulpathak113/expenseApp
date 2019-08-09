@@ -64,7 +64,6 @@ class Expense extends Component {
         const paidTo = this.state.paidTo
         let index
         if (e.target.checked) {
-            console.log(e.target.id)
             paidTo.push(this.props.persons[e.target.value].nickname)
             $(`.inpt${e.target.value}`).show();
         } else {
@@ -73,7 +72,6 @@ class Expense extends Component {
             $(`.inpt${e.target.value}`).hide();
         }
         this.setState({ paidTo: paidTo })
-        console.log(this.state.paidTo)
     }
 
     changeDate(date) {
@@ -91,13 +89,10 @@ class Expense extends Component {
     handleChange1 = (e) => {
         var stateUpdate = {};
         stateUpdate[e.target.id] = e.target.value;
-        console.log(stateUpdate[e.target.id])
         this.setState(stateUpdate);
-        console.log(this.state.stateUpdate)
         const newIds = this.state.paidTo.slice() //copy the array
-        newIds[e.target.id] = stateUpdate[e.target.id]+this.state.paidTo[e.target.id]//execute the manipulations
-        this.setState({paidTo: newIds}) //set the new state
-        console.log(this.state.paidTo)       
+        newIds[e.target.id] = this.props.persons[e.target.id].nickname+"-"+e.target.value//execute the manipulations
+        this.setState({paidTo: newIds}) //set the new state       
     }
 
     Sclose() {
@@ -105,7 +100,7 @@ class Expense extends Component {
         date: new Date(),
         amount: '',
         paidBy: '',
-        paidTo: '',
+        paidTo: [],
         selectedRadio: 0 });
     }
     saveOpen() {
@@ -143,7 +138,7 @@ class Expense extends Component {
         date: new Date(),
         amount: '',
         paidBy: '',
-        paidTo: '',
+        paidTo: [],
         selectedRadio: 0 });
     }
 
@@ -207,17 +202,19 @@ class Expense extends Component {
         });
 
      
-        var test= data[4];
-        console.log(test)
-         test.map(item=>{
-          $(document).ready(function() {
-             if(document.getElementById(`${item}`).checked==false){
-                document.getElementById(`${item}`).checked=true;
-                $(`.inpt${document.getElementById(`${item}`).value}`).show();
-             }
-            }
-        )
-         })
+        // var test= data[4];
+        // console.log(test)
+        //  test.map(item=>{
+        //   $(document).ready(function() {
+        //       if(document.getElementById(item)){
+        //         if(document.getElementById(`${item}`).checked==false){
+        //             document.getElementById(`${item}`).checked=true;
+        //             $(`.inpt${document.getElementById(`${item}`).value}`).show();
+        //          }
+        //       }
+        //     }
+        // )
+        //  })
     }
 
     
@@ -602,7 +599,7 @@ class Expense extends Component {
                                                 /> {item.nickname} 
                                         <input type="text"
                                          id={id} 
-                                         onBlur= {this.handleChange1.bind(this)}
+                                         onChange= {this.handleChange1.bind(this)}
                                          value={this.state.stateUpdate}
                                          style={{width: "30px",display:'none'}}
                                          className={`inpt${id}`}
@@ -641,7 +638,6 @@ class Expense extends Component {
                             /></div>
                             <div><span className="expdesc">Description</span> <input type="text" id="description" value={this.state.description} onChange={this.handleChange.bind(this)} className="inputDesc"></input></div>
                             <div className="divPaid"><span className="paid">Who Paid?</span>
-
                                 {this.props.persons && this.props.persons.map((item, id) => {
                                     return (
                                         <span className="paidradio">
@@ -659,16 +655,23 @@ class Expense extends Component {
                             <div><span className="expamount">Amount</span> <input type="text" style={{ 'margin-top': '9px' }} id="amount" value={this.state.amount} onChange={this.handleChange.bind(this)}></input></div>
                             <div className="divPaid"><span className="expWho">For Whom?</span>
                                 {this.props.persons && this.props.persons.map((item, id) => {
+    
                                     return (
                                         <span className="paidradio">
-                                            <input type="checkbox" id={item.nickname} value={id} onChange={this.onToggle.bind(this)} /> {item.nickname}
-                                            <input type="text"
-                                         id={id} 
-                                         onBlur= {this.handleChange1.bind(this)}
-                                         value={this.state.stateUpdate}
-                                         style={{width: "30px",display:'none'}}
-                                         className={`inpt${id}`}
-                                         name={`inpt${id}`}/>
+                                            <input type="checkbox"
+                                                    checked={this.state.paidTo.some( res => res.includes(item.nickname))}
+                                                   id={item.nickname} value={id} onChange={this.onToggle.bind(this)} /> {item.nickname}
+                                            {
+                                                this.state.paidTo.some( res => res.includes(item.nickname)) ?
+                                                <input type="text"
+                                                    id={id} 
+                                                    onBlur= {this.handleChange1.bind(this)}
+                                                    defaultValue={this.state.paidTo[id]?this.state.paidTo[id].substring(this.state.paidTo[id].indexOf("-")+1):""}
+                                                    style={{width: "30px"}}
+                                                    className={`inpt${id}`}
+                                                    name={`inpt${id}`}/> : null
+ 
+                                            }
                                         </span>
                                     )
                                 })}
