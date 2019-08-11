@@ -26,10 +26,12 @@
     "react-router-dom": "^5.0.1",
     "react-router-redux": "^4.0.8",
     "react-scripts": "3.0.1",
+    "react-spinners-kit": "^1.9.0",
     "reactstrap": "^8.0.0",
     "redux": "^4.0.1",
     "redux-firestore": "^0.8.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^4.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

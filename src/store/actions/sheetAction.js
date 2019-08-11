@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from "axios";
 import history from "../../components/history";
 

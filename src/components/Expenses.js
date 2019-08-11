@@ -14,7 +14,6 @@ import DraggableModalDialog from './Draggable'
 
 
 import "react-datepicker/dist/react-datepicker.css";
-import { conditionalExpression } from '@babel/types';
 
 // var value = new Date().toISOString();
 
@@ -47,7 +46,8 @@ class Expense extends Component {
         currentPage: 1,
         selectedValue:10,
         nonevensplit:'',
-        quant:''
+        quant:'',
+        checkAll: false
     }
 }
 
@@ -65,12 +65,13 @@ class Expense extends Component {
         let index
         if (e.target.checked) {
             paidTo.push(this.props.persons[e.target.value].nickname)
+            console.log(this.state.paidTo)
         } else {
             index = paidTo.indexOf(this.props.persons[e.target.value].nickname)
             paidTo.splice(index, 1)
+            console.log(this.state.paidTo)
         }
         this.setState({ paidTo: paidTo })
-        console.log(this.state.paidTo) 
     }
 
     changeDate(date) {
@@ -89,15 +90,16 @@ class Expense extends Component {
         var stateUpdate = {};
         stateUpdate[e.target.id] = e.target.value;
         this.setState(stateUpdate);
-        const newIds = this.state.paidTo.slice()
-        console.log(stateUpdate) 
-        newIds[e.target.id] = this.props.persons[e.target.id].nickname+"-"+e.target.value
-        this.setState({paidTo: newIds})  
-        console.log(this.state.paidTo)  
+        const newIds = []
+        console.log(newIds)
+        newIds.push(this.props.persons[e.target.id].nickname+"-"+e.target.value)
+        console.log(newIds)
+        this.setState({paidTo: newIds})
+        console.log(this.state.paidTo)
     }
 
     Sclose() {
-        this.setState({ showModalSave: false,paidTo:[],description: '',
+        this.setState({ showModalSave: false,description: '',
         date: new Date(),
         amount: '',
         paidBy: '',
@@ -136,7 +138,7 @@ class Expense extends Component {
     }
 
     close() {
-        this.setState({ showModal: false,paidTo:[],description: '',
+        this.setState({ showModal: false,description: '',
         date: new Date(),
         amount: '',
         paidBy: '',
@@ -202,21 +204,6 @@ class Expense extends Component {
             amount: data[3],
             expenseId: data[5]
         });
-
-     
-        // var test= data[4];
-        // console.log(test)
-        //  test.map(item=>{
-        //   $(document).ready(function() {
-        //       if(document.getElementById(item)){
-        //         if(document.getElementById(`${item}`).checked==false){
-        //             document.getElementById(`${item}`).checked=true;
-        //             $(`.inpt${document.getElementById(`${item}`).value}`).show();
-        //          }
-        //       }
-        //     }
-        // )
-        //  })
     }
 
     
@@ -254,7 +241,7 @@ class Expense extends Component {
             this.setState({ isSelected: false })
             items.push(this.props.expenses[e.target.value][5])
         } else {
-            this.setState({ isSelected: true })
+            this.setState({ isSelected: true,chckall:false })
             index = items.indexOf(+e.target.value)
             items.splice(index, 1)
         }
@@ -306,14 +293,14 @@ class Expense extends Component {
         var checkboxes = document.getElementsByTagName('input');
         if (ele.target.checked) {
             for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].type === 'checkbox') {
+                if (checkboxes[i].type === 'checkbox'&& checkboxes[i].checked === false ) {
                     checkboxes[i].checked = true;
                 }
             }
             items.push(expenses.map(item=>item[5]))
             items=items[0]
                 this.setState({
-                    items:items,isSelected: false
+                    items:items,isSelected: false,chckall:true
                 })
 
         } else {
@@ -322,9 +309,9 @@ class Expense extends Component {
                     checkboxes[j].checked = false;
                 }
             }
-            items.splice(expenses.map(item=>item[5]), 1)
+            items= []
             this.setState({
-                items:items,isSelected: true
+                items:items,isSelected: true,chckall:false
             })
         }
        
@@ -367,42 +354,13 @@ class Expense extends Component {
         this.props.allexpense({id:id,currentPage:this.state.currentPage})
     }
     render() {
-        this.interval = setInterval(() => {
-            if (this.props.expenses && this.props.expenses.length >= 1) {
-                if (this.state.isPayment) {
-                    this.setState({
-                        isPayment: false
-                    });
-                }
-            }
-            else {
-                this.setState({
-
-                })
-            }
-        }, 1000);
-
-        this.interval = setInterval(() => {
-            if (this.props.expenses &&this.props.expenses.length >= 2) {
-                if (this.state.chckall) {
-                    this.setState({
-                        chckall: false
-                    });
-                }
-            }
-            else {
-                this.setState({
-
-                })
-            }
-        }, 1000);
 
         const field = this.props.expenses;
         var arr2=[]
      field && field.map(item=>{
-         arr2.push(item[2])
+         return arr2.push(item[2])
      })
-   var arr3= [... new Set(arr2)]
+   var arr3= [...new Set(arr2)]
         return (
             <div>
             
@@ -411,12 +369,12 @@ class Expense extends Component {
             <select className="mdb-select md-form"
                     value={this.state.selectValue}
                     onChange={this.handleSelection.bind(this)}
-                    style={{"margin-right": "24px"}}
+                    style={{"marginRight": "24px"}}
                     >
                     <option value="all" >Anyone</option>
             {arr3 && arr3.map((item, id) => {
                 return(
-                 <option value={item} >{item}</option>
+                 <option value={item} key={id}>{item}</option>
                  ) })}
                 </select>
 
@@ -425,7 +383,7 @@ class Expense extends Component {
             <select className="mdb-select md-form"
                     value={this.state.selectedValue} 
                     onChange={this.filterSelection.bind(this)}
-                    style={{"margin-right": "24px"}}
+                    style={{"marginRight": "24px"}}
                     >
                     <option value="10" >10</option>
                     <option value="25" >25</option>
@@ -479,7 +437,7 @@ class Expense extends Component {
               </button>
               <button
                 type="button"
-                id={Math.ceil(this.props.count /10)}
+                id={this.props.count?Math.ceil(this.props.count) /10:""}
                 style={{
                   display:
                   this.props.count=== undefined || Math.ceil(this.props.count /10) === this.state.currentPage || this.props.count< this.state.selectedValue
@@ -501,7 +459,7 @@ class Expense extends Component {
                 <table border="1">
                     <thead>
                         <tr className="rowContent">
-                            <th><center><input type="checkbox" disabled={this.state.chckall} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" />Action</center></th>
+                            <th><center><input type="checkbox" disabled={field?!(field.length > 1):""} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" />Action</center></th>
                             <th><center>Date</center></th>
                             <th><center>Description</center></th>
                             <th><center>Who Paid?</center></th>
@@ -510,7 +468,7 @@ class Expense extends Component {
                         </tr>
                         {field && field.map((item, id) => {
                             return (
-                                <tr key={item.id}>
+                                <tr key={id}>
                                     <td>
                                         <input type="checkbox" value={id} onChange={this.onToggleEdit.bind(this)} className="selectCheckboxDel" name="delchck" />
                                         <button onClick={this.editMode.bind(this, id)}>Edit</button></td>
@@ -518,9 +476,9 @@ class Expense extends Component {
                                     <td><center>{item[1]}</center></td>
                                     <td><center>{item[2]}</center></td>
                                     <td><center>{item[3]}</center></td>
-                                    <td><center>{item[4] && item[4].map((name) => {
+                                    <td><center>{item[4] && item[4].map((name,id) => {
                                         return (
-                                            <span style={{ 'paddingRight': '5px' }}>{name}</span>
+                                            <span style={{ 'paddingRight': '5px' }} key={id}>{name}</span>
                                         )
                                     })}</center></td>
                                 </tr>
@@ -540,7 +498,7 @@ class Expense extends Component {
                     <Button
                         variant="primary"
                         size="sm"
-                        disabled={this.props.isComputeDisabled}
+                        disabled={this.props.expenses?!this.props.expenses.length >= 1:""}
                         onClick={() => this.props.handleSelect("payment")}
                         className="perEx">Compute Payments</Button>
 
@@ -574,30 +532,30 @@ class Expense extends Component {
 
                                 {this.props.persons && this.props.persons.map((item, id) => {
                                     return (
-                                        <span className="paidradio">
+                                        <span className="paidradio" key={id}>
                                             <input type="radio"
                                                 name="radioButtonSet"
                                                 id={id}
                                                 value={id}
                                                 checked={this.state.selectedRadio === id}
                                                 onChange={this.handleRadioChange.bind(this, id)}
-                                                style={{ 'margin-left': '9px' }} /> {item.nickname}
+                                                style={{ 'marginLeft': '9px' }} /> {item.nickname}
                                         </span>
                                     )
                                 })}
 
                             </div>
-                            <div><span className="expamount">Amount</span> <input type="number" style={{ 'margin-top': '9px', 'margin-left': '5px' }} id="amount" value={this.state.amount} onChange={this.handleChange.bind(this)}></input> <b><i>(Numbers only)</i></b></div>
+                            <div><span className="expamount">Amount</span> <input type="number" style={{ 'marginTop': '9px', 'marginLeft': '5px' }} id="amount" value={this.state.amount} onChange={this.handleChange.bind(this)}></input> <b><i>(Numbers only)</i></b></div>
                             <div className="divPaid"><span className="expWho">For Whom?</span>
                                 {this.props.persons && this.props.persons.map((item, id) => {
                                     return (
-                                        <span className="paidradio" style={{display:this.state.nonevensplit}} >
+                                        <span className="paidradio" style={{display:this.state.nonevensplit}} key={id}>
                                             <input type="checkbox"
                                             id={item.nickname}
                                                 value={id}
                                                 name="expWho"
                                                 onChange={this.onToggle.bind(this)}
-                                                style={{ 'margin-left': '10px' }}
+                                                style={{ 'marginLeft': '10px' }}
                                                 /> {item.nickname} 
                                                 {
                                                     this.state.paidTo.some( res => res.includes(item.nickname)) ?
@@ -647,7 +605,7 @@ class Expense extends Component {
                             <div className="divPaid"><span className="paid">Who Paid?</span>
                                 {this.props.persons && this.props.persons.map((item, id) => {
                                     return (
-                                        <span className="paidradio">
+                                        <span className="paidradio" key={id}>
                                             <input type="radio"
                                                 name="radioButtonSet"
                                                 id={id}
@@ -659,12 +617,12 @@ class Expense extends Component {
                                 })}
 
                             </div>
-                            <div><span className="expamount">Amount</span> <input type="text" style={{ 'margin-top': '9px' }} id="amount" value={this.state.amount} onChange={this.handleChange.bind(this)}></input></div>
+                            <div><span className="expamount">Amount</span> <input type="text" style={{ 'marginTop': '9px' }} id="amount" value={this.state.amount} onChange={this.handleChange.bind(this)}></input></div>
                             <div className="divPaid"><span className="expWho">For Whom?</span>
                                 {this.props.persons && this.props.persons.map((item, id) => {
     
                                     return (
-                                        <span className="paidradio">
+                                        <span className="paidradio" key={id}>
                                             <input type="checkbox"
                                                     checked={this.state.paidTo.some( res => res.includes(item.nickname))}
                                                    id={item.nickname} value={id} onChange={this.onToggle.bind(this)} /> {item.nickname}
@@ -707,7 +665,6 @@ class Expense extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-    console.log(state)
     return {
         expenses: state.expense.data1.expenses,
         count: state.expense.data1.count

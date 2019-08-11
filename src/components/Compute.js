@@ -1,34 +1,46 @@
-import React, { Component } from 'react';
-import axios from 'axios'
+import React, { Component, lazy, Suspense } from "react";
+import { allexpense } from "../store/actions/expenseAction";
+import { connect } from "react-redux";
+import { PushSpinner } from "react-spinners-kit";
 
-class Compute extends Component{
+class Compute extends Component {
+  componentDidMount() {}
 
+  render() {
+    const PaymentList = () => <div>{this.props.payment}</div>;
 
-    componentDidMount() {
-        // var id = window.location.pathname.substring(7, 9)
-        // this.setState({
-        //     sheetId: id,
-        //     expenses:''
-        // })
+    const Lazy = lazy(
+      () =>
+        new Promise(resolve => {
+          setTimeout(() => {
+            resolve({ default: () => <PaymentList /> });
+          }, 1000);
+        })
+    );
 
-        // axios.get(`http://127.0.0.1:8000/expense/?pk=${id}`)
-        //     .then(res => {
-        //         if (res.status === 200) {
-        //             this.setState({ expenses: res.data });
-        //         }
-        //     })
-    }
-
-    render(){
-        return(
-            <div>
-            
-            hiii
-
-
-            </div>
-        )
-    }
+    return (
+      <div>
+        <Suspense fallback={<PushSpinner size={30} color="#686769" />}>
+          <Lazy />
+        </Suspense>
+      </div>
+    );
+  }
 }
 
-export default Compute
+const mapStateToProps = (state, ownProps) => {
+  return {
+    payment: state.payment.data
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    allexpense: expense => dispatch(allexpense(expense))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Compute);

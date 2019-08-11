@@ -1,5 +1,6 @@
+/* eslint-disable */
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Router, Switch, Route } from "react-router-dom";
 import Home from "./components/Home";
 import PersonDetails from "./components/PersonDetails";
 import history from "./components/history";

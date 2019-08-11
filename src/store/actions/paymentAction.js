@@ -1,21 +1,19 @@
+/* eslint-disable */
 import axios from "axios";
 var _ = require("lodash");
 
 export const getAllPayment = payment => {
-  console.log(payment.expenses);
   var url =
     "https://cors-anywhere.herokuapp.com/http://www.shortreckonings.com/api/1.0/query.php?";
   return dispatch => {
     var arr1 = [];
     for (var i = 0; i < payment.persons.length; i++) {
       arr1.push(payment.persons[i].nickname);
-      console.log(arr1);
     }
 
     var arr2 = [];
-    for (var i = 0; i < payment.expenses.length; i++) {
-      arr2.push(payment.expenses[i][4]);
-      console.log(arr2);
+    for (var l = 0; l < payment.expenses.length; l++) {
+      arr2.push(payment.expenses[l][4]);
     }
 
     var arr3 = [];
@@ -33,11 +31,13 @@ export const getAllPayment = payment => {
             "*" + arr2[k][index].substring(arr2[k][index].indexOf("-") + 1)
           );
         } else if (arr2[k].some(res => res.includes(arr1[j]))) {
-          var result = arr2[k].map(item =>
+          var result1 = arr2[k].map(item =>
             item.substring(0, item.indexOf("-"))
           );
-          var index = result.indexOf(arr1[j]);
-          arr3.push(arr2[k][index].substring(arr2[k][index].indexOf("-") + 1));
+          var index1 = result1.indexOf(arr1[j]);
+          arr3.push(
+            arr2[k][index1].substring(arr2[k][index1].indexOf("-") + 1)
+          );
         } else if (
           !arr2[k].some(res => res.includes(arr1[j])) &&
           arr1[j] === payment.expenses[k][2]

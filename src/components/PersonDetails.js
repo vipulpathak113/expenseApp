@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+/* eslint-disable */
+import React, { Component, lazy, Suspense } from "react";
 import { connect } from 'react-redux'
 import { Button, Modal } from 'react-bootstrap';
 import { createPerson } from '../store/actions/addPersonAction'
@@ -14,6 +15,8 @@ import Sheets from './Sheets'
 import Compute from './Compute'
 import $ from 'jquery';
 import DraggableModalDialog from './Draggable'
+import { resolve } from "q";
+
 
 class PersonDetails extends Component {
 
@@ -39,7 +42,7 @@ class PersonDetails extends Component {
             sheetId: '',
             isSelected: true,
             expenses:'',
-            chckall: true,
+            chckall: false,
         }
     }
 
@@ -49,10 +52,12 @@ class PersonDetails extends Component {
         if (e.target.checked) {
             this.setState({ isSelected: false })
             items.push(this.props.persons1[e.target.value].id)
+            
         } else {
-            this.setState({ isSelected: true })
+            this.setState({ isSelected: true,chckall:false })
             index = items.indexOf(+e.target.value)
             items.splice(index, 1)
+            
         }
         this.setState({ items: items })
 
@@ -65,15 +70,16 @@ class PersonDetails extends Component {
         var checkboxes = document.getElementsByTagName('input');
         if (ele.target.checked) {
             for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].type === 'checkbox') {
+                if (checkboxes[i].type === 'checkbox' && checkboxes[i].checked === false ) {
                     checkboxes[i].checked = true;
                 }
             }
             items.push(persons.map(item=>item.id))
             items=items[0]
                 this.setState({
-                    items:items,isSelected: false
+                    items:items,isSelected: false,chckall:true
                 })
+
 
         } else {
             for (var j = 0; j < checkboxes.length; j++) {
@@ -81,10 +87,11 @@ class PersonDetails extends Component {
                     checkboxes[j].checked = false;
                 }
             }
-            items.splice(persons.map(item=>item.id), 1)
+            items= []
             this.setState({
-                items:items,isSelected: true
+                items:items,isSelected: true,chckall:false
             })
+        
         }
        
     }
@@ -117,9 +124,9 @@ class PersonDetails extends Component {
             
         }
        })
-        if (this.props.persons1 && this.props.persons1.length <= 2) {
+        if (this.props.persons1 && this.props.persons1.length <1) {
             this.setState({
-                isExpenseDisabled: true
+                chckall: false
             });
         }}
         else{
@@ -172,13 +179,6 @@ class PersonDetails extends Component {
 
     async saveAndNew(e) {
         e.preventDefault();
-        if (this.props.persons1 && this.props.persons1.length >= 1) {
-            if (this.state.isExpenseDisabled) {
-                this.setState({
-                    isExpenseDisabled: false
-                });
-            }
-        }
         this.props.createPerson({ name: this.state.name, 
         nickname: this.state.nickname,
          comment: this.state.comment, 
@@ -243,81 +243,45 @@ class PersonDetails extends Component {
 }
 
     render() {
-        this.interval = setInterval(() => {
-            if (this.props.persons1 && this.props.persons1.length >= 2) {
-                if (this.state.isExpenseDisabled && this.state.chckall) {
-                    this.setState({
-                        isExpenseDisabled: false,
-                        chckall: false
-                    });
-                }
-            }
-            else {
-                this.setState({
-
-                })
-            }
-        }, 1000);
-
-        
-
-        this.interval1 = setInterval(() => {
-            if (this.state.expenses && this.state.expenses.length >= 1) {
-                if (this.state.isComputeDisabled) {
-                    this.setState({
-                        isComputeDisabled: false
-                    });
-                }
-            }
-            else {
-                this.setState({
-
-                })
-            }
-        }, 1000);
 
 
         const persons = this.props.persons1;
 
+        if(persons)
+        var status =!(persons.length >= 2)
         return (
             <div>
             <Sheets persons={this.props.persons1} id= {this.state.sheetId}/>
                 <Tabs activeKey={this.state.key}
                     onSelect={key => this.setState({ key })}>
-                    <Tab eventKey="group" title="Create Group" ><table border="1">
-                        <thead>
-                            <tr className="rowContent">
-                                <th><center><input type="checkbox" disabled={this.state.chckall} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" />Action</center></th>
-                                <th><center>Person Name</center></th>
-                                <th><center>Display Name</center></th>
-                                <th><center>Description or Comment</center></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-
-    {persons? persons.map((item, id) => {
-        return (
-            <tr key={item.id}>
-                <td><center>
-                    <input type="checkbox" id="check" value={id} onChange={this.onToggle.bind(this)} className="selectCheckbox" name="delchck" />
-                    <button onClick={this.editMode.bind(this, id)}>Edit</button>
-                </center>
-                </td>
-                <td><center>{item.name}</center></td>
-                <td><center>{item.nickname}</center></td>
-                <td><center>{item.comment}</center></td>
-            </tr>
-        )
-
-                })
-                : <tr style={{height:'127px'}}>
-                <td className="bor">Please enter the list of persons who are sharing expenses:</td> <td className="bor">Click Add Person to get started.</td>
-                <td className="bor">Once you have entered at least 2 persons,</td><td className="bor"> click Enter Expenses to start entering expenses.</td>
-                </tr>
-}
-                    </table>
+                    <Tab eventKey="group" title="Create Group" >
+                    <Suspense fallback={ <div>Loading...</div> }>
+                    <table border="1">
+                    <thead>
+                        <tr className="rowContent">
+                            <th><center><input type="checkbox" disabled={!(persons.length > 1)} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" checked={this.state.chckall} name="chckall" />Action</center></th>
+                            <th><center>Person Name</center></th>
+                            <th><center>Display Name</center></th>
+                            <th><center>Description or Comment</center></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+{persons?persons.map((item, id) => {
+    return (
+        <tr key={id}>
+            <td><center>
+                <input type="checkbox" id="check" value={id} onChange={this.onToggle.bind(this)} className="selectCheckbox" name="delchck"/>
+                <button onClick={this.editMode.bind(this, id)}>Edit</button>
+            </center>
+            </td>
+            <td><center>{item.name}</center></td>
+            <td><center>{item.nickname}</center></td>
+            <td><center>{item.comment}</center></td></tr>
+    )}):null}
+</tbody>
+                </table>
+    </Suspense>
+                    
                         <Button
                             variant="primary"
                             size="sm"
@@ -332,22 +296,22 @@ class PersonDetails extends Component {
                             size="sm"
                             onClick={this.deleteSelected.bind(this)}
                             className="perEx"
-                            disabled={this.state.isSelected}>
+                            disabled={this.state.isSelected || !(persons.length >= 1)}>
 
                             Delete Person
                             </Button>
 
-
+                            
                         <Button
                             variant="primary"
                             size="sm"
-                            disabled={this.state.isExpenseDisabled}
+                            disabled={status}
                             onClick={() => this.handleSelect("expense")}
                             className="perEx">Enter Expense</Button>
                     </Tab>
                     <Tab eventKey="expense"
                         title="Enter Expenses"
-                        disabled={this.state.isExpenseDisabled}>
+                        disabled={status}>
                         <Expense open={this.open}
                             close={this.close} 
                             handleChange={this.handleChange}
@@ -356,7 +320,7 @@ class PersonDetails extends Component {
                             isComputeDisabled={this.state.isComputeDisabled}
                             />
                     </Tab>
-                    <Tab eventKey="payment" title="Compute Payments" disabled={this.state.isComputeDisabled}>
+                    <Tab eventKey="payment" title="Compute Payments" disabled={this.props.expenses?!this.props.expenses.length >= 1:""}>
                     <Compute/>
                     </Tab>
                 </Tabs>
