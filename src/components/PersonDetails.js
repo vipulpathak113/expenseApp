@@ -43,6 +43,7 @@ class PersonDetails extends Component {
             isSelected: true,
             expenses:'',
             chckall: false,
+            errdsply:' '
         }
     }
 
@@ -114,7 +115,7 @@ class PersonDetails extends Component {
             if(this.state.expenses){
          var items= this.state.items
        items&& items.map(pol=>{
-        var pname= this.props.persons1.filter(item=>item.id===pol)[0].nickname
+        var pname= this.props.persons1?this.props.persons1.filter(item=>item.id===pol)[0].nickname:""
         var expp= this.state.expenses.filter(item=>item[2]===pname || item[4].includes(pname)).length
         if(expp!==0){
         alert("Cannot delete person as involved in transaction")
@@ -145,13 +146,13 @@ class PersonDetails extends Component {
     close() {
         this.setState({ showModal: false,name: '',
         nickname: '',
-        comment: '', });
+        comment: '',errdsply: 'none' });
     }
 
     Sclose() {
         this.setState({ showModalSave: false,name: '',
         nickname: '',
-        comment: '', });
+        comment: '', errdsply: 'none'});
     }
 
    
@@ -165,6 +166,9 @@ class PersonDetails extends Component {
 
     async save(e) {
         e.preventDefault();
+        this.checkReqFields();
+        if(this.checkReqFields()===true){
+        this.setState({errdsply: ' '})
         this.props.createPerson({ name: this.state.name,
              nickname: this.state.nickname,
               comment: this.state.comment,
@@ -172,13 +176,18 @@ class PersonDetails extends Component {
         this.setState({
             showModal: false, name: '',
             nickname: '',
-            comment: ''
+            comment: '',
 
         },);
+    }
     }
 
     async saveAndNew(e) {
         e.preventDefault();
+        this.checkReqFields();
+        if(this.checkReqFields()===true){
+        this.setState({errdsply: ' '})
+        if(this.props.personError===null){
         this.props.createPerson({ name: this.state.name, 
         nickname: this.state.nickname,
          comment: this.state.comment, 
@@ -187,8 +196,10 @@ class PersonDetails extends Component {
             name: '',
             nickname: '',
             comment: '',
-            showModal: true
+            showModal: true,
         })
+    }
+}
     }
 
     editMode(index, event) {
@@ -203,6 +214,9 @@ class PersonDetails extends Component {
 
     async saveClose(e) {
         this.setState({ showModalSave: false });
+        this.checkReqFields();
+        if(this.checkReqFields()===true){
+        this.setState({errdsply: ' '})
         this.props.updatePerson({ name: this.state.name,
          nickname: this.state.nickname,
         comment: this.state.comment,
@@ -213,6 +227,7 @@ class PersonDetails extends Component {
             nickname: '',
             comment: '',
         })
+    }
     }
 
     tabChange() {
@@ -237,6 +252,24 @@ class PersonDetails extends Component {
             })
     }
 
+    checkReqFields(){
+		var returnValue;
+		var name=document.getElementById("name").value;
+		var nickname=document.getElementById("nickname").value;
+		
+		returnValue=true;
+		if(name.trim()==""){
+			document.getElementById("errname").innerHTML="*Name is required";
+			returnValue=false;
+		}
+		if(nickname.trim()==""){
+			document.getElementById("errdsply").innerHTML="*Nickname is required";
+			returnValue=false;
+		}								
+		return returnValue;
+	}
+
+
     capitalize(s)
 {
     return s && s[0].toUpperCase() + s.slice(1);
@@ -259,7 +292,7 @@ class PersonDetails extends Component {
                     <table border="1">
                     <thead>
                         <tr className="rowContent">
-                            <th><center><input type="checkbox" disabled={!(persons.length > 1)} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" checked={this.state.chckall} name="chckall" />Action</center></th>
+                            <th><center><input type="checkbox" disabled={persons?!(persons.length > 1):""} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" checked={this.state.chckall} name="chckall" />Action</center></th>
                             <th><center>Person Name</center></th>
                             <th><center>Display Name</center></th>
                             <th><center>Description or Comment</center></th>
@@ -339,6 +372,7 @@ class PersonDetails extends Component {
                              id="name" value={this.state.name}
                               onChange={this.handleChange.bind(this)}
                             ></input>
+                            <span id="errname" className="reqError"></span>
                             </div>
                            
                             <div><span>Display Name</span> 
@@ -347,9 +381,8 @@ class PersonDetails extends Component {
                              value={this.state.nickname}
                             onChange={this.handleChange.bind(this)}
                             ></input>
-                            
                             </div>
-                           <span className="error">{this.props.personError?this.capitalize(this.props.personError.nickname[0]):""}</span>
+                           <span className="reqError" id="errdsply" style={{display:this.state.errdsply}}>{this.props.personError?this.capitalize(this.props.personError.nickname[0]):""}</span>
                            <div><span className="comment">Comment</span> <input type="text" 
                            style={{ 'marginTop': '25px', 'width': '280px', 'marginRight': '-2' }}
                            id="comment" value={this.state.comment} 
@@ -407,6 +440,7 @@ class PersonDetails extends Component {
     }
 }
 const mapStateToProps = (state, ownProps) => {
+    console.log(state)
     return {
         personError: state.person.personError,
         persons: state.person.data,

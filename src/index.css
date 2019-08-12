@@ -257,3 +257,18 @@ a {
 .modal.show .modal-dialog {
   width: 451px;
 }
+
+.reqError {
+  color: #ff0000; /*Red Color*/
+  font-weight: bold;
+  display: flex;
+  margin-left: 84px;
+  margin-top: 3px;
+  padding-bottom: 3px;
+}
+
+input[class*="inpt"] {
+  width: 26px;
+  margin-left: 4px;
+  height: 17px;
+}

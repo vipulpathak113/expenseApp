@@ -116,6 +116,9 @@ class Expense extends Component {
 
     save(e) {
         e.preventDefault();
+        this.checkReqFields();
+        
+        if(this.checkReqFields()===true){
         this.props.createExpense({
             description: this.state.description,
             date: this.state.startDate,
@@ -139,6 +142,7 @@ class Expense extends Component {
         })
         $('input[name=expWho]').prop('checked', false);
     }
+    }
 
     close() {
         this.setState({ showModal: false,description: '',
@@ -154,6 +158,10 @@ class Expense extends Component {
     }
 
     saveAndNew(e) {
+
+        this.checkReqFields();
+
+        if(this.checkReqFields()===true){
         e.preventDefault();
         this.props.createExpense({
             description: this.state.description,
@@ -178,6 +186,7 @@ class Expense extends Component {
         })
 
         $('input[name=expWho]').prop('checked', false);
+    }
 
     }
 
@@ -212,7 +221,9 @@ class Expense extends Component {
     
 
     saveClose(e) {
-        if(this.state.amount)
+        this.checkReqFields();
+        
+        if(this.checkReqFields()===true){
         this.setState({ showModalSave: false });
         this.props.updateExpense({
             amount: this.state.amount,
@@ -235,6 +246,8 @@ class Expense extends Component {
             items: [],
 
         });
+        $('input[name=delchck]').prop('checked', false);
+    }
     }
 
     onToggleEdit(e) {
@@ -347,6 +360,23 @@ class Expense extends Component {
           currentPage: Number(event.target.id)
         });
       }
+
+      checkReqFields(){
+		var returnValue;
+		var desc=document.getElementById("description").value;
+		var amount=document.getElementById("amount").value;
+		
+		returnValue=true;
+		if(desc.trim()==""){
+			document.getElementById("reqTxtdesc").innerHTML="Description is required";
+			returnValue=false;
+		}
+		if(amount.trim()==""){
+			document.getElementById("reqTxtamount").innerHTML="Amount is required";
+			returnValue=false;
+		}								
+		return returnValue;
+	}
 
 
     componentDidMount() {
@@ -530,7 +560,9 @@ class Expense extends Component {
                                 id="date"
                                 value={this.state.startDate}
                             /></div>
-                            <div><span className="expdesc">Description</span> <input type="text" id="description" value={this.state.description} onChange={this.handleChange.bind(this)} className="inputDesc"></input></div>
+                            <div><span className="expdesc">Description</span> <input type="text" id="description" value={this.state.description} onChange={this.handleChange.bind(this)} className="inputDesc"></input>
+                            <span id="reqTxtdesc" className="reqError"></span>
+                            </div>
                             <div className="divPaid"><span className="paid">Who Paid?</span>
 
                                 {this.props.persons && this.props.persons.map((item, id) => {
@@ -548,7 +580,10 @@ class Expense extends Component {
                                 })}
 
                             </div>
-                            <div><span className="expamount">Amount</span> <input type="number" style={{ 'marginTop': '9px', 'marginLeft': '5px' }} id="amount" value={this.state.amount} onChange={this.handleChange.bind(this)}></input> <b><i>(Numbers only)</i></b></div>
+                            <div><span className="expamount">Amount</span> <input type="number" style={{ 'marginTop': '9px', 'marginLeft': '5px' }} id="amount" value={this.state.amount} onChange={this.handleChange.bind(this)}></input> <b><i>(Numbers only)</i></b>
+                            <span id="reqTxtamount" className="reqError"></span>
+                            
+                            </div>
                             <div className="divPaid"><span className="expWho">For Whom?</span>
                                 {this.props.persons && this.props.persons.map((item, id) => {
                                     return (
@@ -568,7 +603,11 @@ class Expense extends Component {
                                                         defaultValue={this.state.stateUpdate}
                                                         style={{width: "30px"}}
                                                         className={`inpt${id}`}
-                                                        name={`inpt${id}`}/> : null
+                                                        name={`inpt${id}`}
+                                                        style={{ "width": "26px",
+                                                        "margin-left": "4px",
+                                                        "height": "17px"}}
+                                                        /> : null
      
                                                 }
 
@@ -604,7 +643,9 @@ class Expense extends Component {
                                 id="date"
                                 value={this.state.startDate}
                             /></div>
-                            <div><span className="expdesc">Description</span> <input type="text" id="description" value={this.state.description} onChange={this.handleChange.bind(this)} className="inputDesc"></input></div>
+                            <div><span className="expdesc">Description</span> <input type="text" id="description" value={this.state.description} onChange={this.handleChange.bind(this)} className="inputDesc"></input>
+                            <span id="reqTxtdesc" className="reqError"></span>
+                            </div>
                             <div className="divPaid"><span className="paid">Who Paid?</span>
                                 {this.props.persons && this.props.persons.map((item, id) => {
                                     return (
@@ -620,7 +661,9 @@ class Expense extends Component {
                                 })}
 
                             </div>
-                            <div><span className="expamount">Amount</span> <input type="text" style={{ 'marginTop': '9px' }} id="amount" value={this.state.amount} onChange={this.handleChange.bind(this)}></input></div>
+                            <div><span className="expamount">Amount</span> <input type="text" style={{ 'marginTop': '9px' }} id="amount" value={this.state.amount} onChange={this.handleChange.bind(this)}></input>
+                            <span id="reqTxtamount" className="reqError"></span>
+                            </div>
                             <div className="divPaid"><span className="expWho">For Whom?</span>
                                 {this.props.persons && this.props.persons.map((item, id) => {
     
@@ -637,7 +680,11 @@ class Expense extends Component {
                                                     defaultValue={this.state.paidTo[id]?this.state.paidTo[id].substring(this.state.paidTo[id].indexOf("-")+1):""}
                                                     style={{width: "30px"}}
                                                     className={`inpt${id}`}
-                                                    name={`inpt${id}`}/> : null
+                                                    name={`inpt${id}`}
+                                                    style={{ "width": "26px",
+                                                        "margin-left": "4px",
+                                                        "height": "17px"}}
+                                                    /> : null
  
                                             }
                                         </span>
