@@ -87,10 +87,13 @@ class Expense extends Component {
     }
 
     handleChange1 = (e) => {
+        const newIds = this.state.paidTo
+        let index
         var stateUpdate = {};
         stateUpdate[e.target.id] = e.target.value;
         this.setState(stateUpdate);
-        const newIds = []
+        index = newIds.indexOf(this.props.persons[e.target.id].nickname)
+        newIds.splice(index, 1)
         console.log(newIds)
         newIds.push(this.props.persons[e.target.id].nickname+"-"+e.target.value)
         console.log(newIds)
@@ -355,7 +358,7 @@ class Expense extends Component {
     }
     render() {
 
-        const field = this.props.expenses;
+        const field = this.props.expenses?this.props.expenses:"";
         var arr2=[]
      field && field.map(item=>{
          return arr2.push(item[2])
@@ -562,7 +565,7 @@ class Expense extends Component {
                                                     <input type="text"
                                                         id={id} 
                                                         onBlur= {this.handleChange1.bind(this)}
-                                                        value={this.state.stateUpdate}
+                                                        defaultValue={this.state.stateUpdate}
                                                         style={{width: "30px"}}
                                                         className={`inpt${id}`}
                                                         name={`inpt${id}`}/> : null
