@@ -531,7 +531,7 @@ class Expense extends Component {
                     <Button
                         variant="primary"
                         size="sm"
-                        disabled={this.props.expenses?!this.props.expenses.length >= 1:""}
+                        disabled={this.props.expenses?!(this.props.expenses.length >= 1):true}
                         onClick={() => this.props.handleSelect("payment")}
                         className="perEx">Compute Payments</Button>
 
@@ -605,7 +605,7 @@ class Expense extends Component {
                                                         className={`inpt${id}`}
                                                         name={`inpt${id}`}
                                                         style={{ "width": "26px",
-                                                        "margin-left": "4px",
+                                                        "marginLeft": "4px",
                                                         "height": "17px"}}
                                                         /> : null
      
@@ -682,7 +682,7 @@ class Expense extends Component {
                                                     className={`inpt${id}`}
                                                     name={`inpt${id}`}
                                                     style={{ "width": "26px",
-                                                        "margin-left": "4px",
+                                                        "marginLeft": "4px",
                                                         "height": "17px"}}
                                                     /> : null
  

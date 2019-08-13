@@ -43,7 +43,6 @@ class PersonDetails extends Component {
             isSelected: true,
             expenses:'',
             chckall: false,
-            errdsply:' '
         }
     }
 
@@ -146,13 +145,13 @@ class PersonDetails extends Component {
     close() {
         this.setState({ showModal: false,name: '',
         nickname: '',
-        comment: '',errdsply: 'none' });
+        comment: ''});
     }
 
     Sclose() {
         this.setState({ showModalSave: false,name: '',
         nickname: '',
-        comment: '', errdsply: 'none'});
+        comment: ''});
     }
 
    
@@ -168,7 +167,6 @@ class PersonDetails extends Component {
         e.preventDefault();
         this.checkReqFields();
         if(this.checkReqFields()===true){
-        this.setState({errdsply: ' '})
         this.props.createPerson({ name: this.state.name,
              nickname: this.state.nickname,
               comment: this.state.comment,
@@ -184,10 +182,11 @@ class PersonDetails extends Component {
 
     async saveAndNew(e) {
         e.preventDefault();
-        this.checkReqFields();
-        if(this.checkReqFields()===true){
-        this.setState({errdsply: ' '})
-        if(this.props.personError===null){
+        this.checkSameNickName();
+        console.log(this.checkSameNickName())
+        this.checkReqFieldsName();
+        this.checkReqFieldsNickName();
+        if(this.checkReqFieldsName()===true&& this.checkReqFieldsNickName()===true){
         this.props.createPerson({ name: this.state.name, 
         nickname: this.state.nickname,
          comment: this.state.comment, 
@@ -198,8 +197,9 @@ class PersonDetails extends Component {
             comment: '',
             showModal: true,
         })
-    }
 }
+
+
     }
 
     editMode(index, event) {
@@ -216,7 +216,6 @@ class PersonDetails extends Component {
         this.setState({ showModalSave: false });
         this.checkReqFields();
         if(this.checkReqFields()===true){
-        this.setState({errdsply: ' '})
         this.props.updatePerson({ name: this.state.name,
          nickname: this.state.nickname,
         comment: this.state.comment,
@@ -252,7 +251,7 @@ class PersonDetails extends Component {
             })
     }
 
-    checkReqFields(){
+    checkReqFieldsName(){
 		var returnValue;
 		var name=document.getElementById("name").value;
 		var nickname=document.getElementById("nickname").value;
@@ -261,12 +260,44 @@ class PersonDetails extends Component {
 		if(name.trim()==""){
 			document.getElementById("errname").innerHTML="*Name is required";
 			returnValue=false;
-		}
+		} else{
+            document.getElementById("errname").innerHTML="";
+			returnValue=true;
+        }						
+		return returnValue;
+    }
+    
+    checkReqFieldsNickName(){
+		var returnValue;
+		var nickname=document.getElementById("nickname").value;
+	
 		if(nickname.trim()==""){
 			document.getElementById("errdsply").innerHTML="*Nickname is required";
 			returnValue=false;
-		}								
+        }
+        else{
+            document.getElementById("errdsply").innerHTML="";
+			returnValue=true;   
+        }								
 		return returnValue;
+    }
+    
+
+    checkSameNickName(){
+if(this.props.persons1&&this.state.nickname ){
+    var returnValue;
+    var pol=this.state.nickname
+    var pname= this.props.persons1.filter(item=>item.nickname===pol).length
+    if(pname>=1){
+        document.getElementById("errdsply").innerHTML="*Nickname already exists";
+        returnValue=false;
+    }
+    else{
+        document.getElementById("errdsply").innerHTML="";
+        returnValue=true;   
+    }								
+    return returnValue; 
+}
 	}
 
 
@@ -279,6 +310,8 @@ class PersonDetails extends Component {
 
 
         const persons = this.props.persons1;
+
+        console.log(persons)
 
         if(persons)
         var status =!(persons.length >= 2)
@@ -329,7 +362,7 @@ class PersonDetails extends Component {
                             size="sm"
                             onClick={this.deleteSelected.bind(this)}
                             className="perEx"
-                            disabled={this.state.isSelected || !(persons.length >= 1)}>
+                            disabled={this.state.isSelected || (persons!==undefined? !(persons.length >= 1):"")}>
 
                             Delete Person
                             </Button>
@@ -353,7 +386,7 @@ class PersonDetails extends Component {
                             isComputeDisabled={this.state.isComputeDisabled}
                             />
                     </Tab>
-                    <Tab eventKey="payment" title="Compute Payments" disabled={this.props.expenses?!this.props.expenses.length >= 1:""}>
+                    <Tab eventKey="payment" title="Compute Payments" disabled={this.props.expenses?!this.props.expenses.length >= 1:true}>
                     <Compute/>
                     </Tab>
                 </Tabs>
@@ -382,7 +415,7 @@ class PersonDetails extends Component {
                             onChange={this.handleChange.bind(this)}
                             ></input>
                             </div>
-                           <span className="reqError" id="errdsply" style={{display:this.state.errdsply}}>{this.props.personError?this.capitalize(this.props.personError.nickname[0]):""}</span>
+                           <span className="reqError" id="errdsply"></span>
                            <div><span className="comment">Comment</span> <input type="text" 
                            style={{ 'marginTop': '25px', 'width': '280px', 'marginRight': '-2' }}
                            id="comment" value={this.state.comment} 

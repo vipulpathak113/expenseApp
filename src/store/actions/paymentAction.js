@@ -58,6 +58,7 @@ export const getAllPayment = payment => {
           })&map=${arr1}`;
       });
     axios.get(url).then(response => {
+      console.log(response.data.slice())
       dispatch({ type: "FETCH_ALL_PAYMENT", payload: response.data });
     });
   };
