@@ -58,8 +58,19 @@ export const getAllPayment = payment => {
           })&map=${arr1}`;
       });
     axios.get(url).then(response => {
-      console.log(response.data.slice())
       dispatch({ type: "FETCH_ALL_PAYMENT", payload: response.data });
     });
+  };
+};
+
+export const getDetail = payment => {
+  console.log(payment);
+  return dispatch => {
+    axios
+      .get(`http://127.0.0.1:8000/expense/detail/?pk=${payment.sheetId}`)
+      .then(response => {
+        console.log(response);
+        dispatch({ type: "FETCH_DETAIL", payload: response.data });
+      });
   };
 };

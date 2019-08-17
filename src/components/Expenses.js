@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import DatePicker from "react-datepicker";

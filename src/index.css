@@ -272,3 +272,48 @@ input[class*="inpt"] {
   margin-left: 4px;
   height: 17px;
 }
+
+.nav-tabs .nav-link {
+  color: black;
+  background: gainsboro;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.nav-tabs .nav-link active {
+  color: black;
+  background: white;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.paymentcol {
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.paytext {
+  margin-bottom: 6px;
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.payarrow {
+  height: 8px;
+  width: 90px;
+  margin-left: 6px;
+  margin-right: 10px;
+  cursor: auto;
+}
+
+.payerarrow {
+  height: 18px;
+  width: 99px;
+  margin-left: 6px;
+  margin-right: 1px;
+  cursor: auto;
+}

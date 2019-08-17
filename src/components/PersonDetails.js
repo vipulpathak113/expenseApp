@@ -7,6 +7,7 @@ import { updatePerson } from '../store/actions/addPersonAction'
 import { deletePerson } from '../store/actions/addPersonAction'
 import {getAllPersons} from '../store/actions/addPersonAction'
 import {getAllPayment} from '../store/actions/paymentAction'
+import {getDetail} from '../store/actions/paymentAction'
 import { updateSheet } from '../store/actions/sheetAction'
 import { Tab, Tabs } from 'react-bootstrap';
 import Expense from './Expenses'
@@ -33,7 +34,7 @@ class PersonDetails extends Component {
             isChecked: false,
             deleteDocId: [],
             isDisabled: true,
-            key: 'group',
+            key: 'expense',
             isExpenseDisabled: true,
             isComputeDisabled: true,
             persons: '',
@@ -103,7 +104,10 @@ class PersonDetails extends Component {
 
         if(value==="payment"){
 
-            this.props.getAllPayment({expenses:this.props.expenses, persons: this.props.persons1})
+            this.props.getAllPayment({expenses:this.props.expenses, persons: this.props.persons1,sheetId: this.state.sheetId})
+
+        this.props.getDetail({sheetId: this.state.sheetId})
+            
 
         }
     }
@@ -311,8 +315,6 @@ if(this.props.persons1&&this.state.nickname ){
 
         const persons = this.props.persons1;
 
-        console.log(persons)
-
         if(persons)
         var status =!(persons.length >= 2)
         return (
@@ -489,7 +491,8 @@ const mapDispatchToProps = (dispatch) => {
         deletePerson: (person) => dispatch(deletePerson(person)),
         getAllPersons: (id) => dispatch(getAllPersons(id)),
         updateSheet: (sheet) => dispatch(updateSheet(sheet)),
-        getAllPayment: (payment)=>dispatch(getAllPayment(payment))
+        getAllPayment: (payment)=>dispatch(getAllPayment(payment)),
+        getDetail:(payment)=>dispatch(getDetail(payment))
     }
 }
 

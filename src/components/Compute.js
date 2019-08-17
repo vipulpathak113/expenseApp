@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component, lazy, Suspense } from "react";
 import { allexpense } from "../store/actions/expenseAction";
 import { connect } from "react-redux";
@@ -7,7 +8,75 @@ class Compute extends Component {
   componentDidMount() {}
 
   render() {
-    const PaymentList = () => <div>{this.props.payment}</div>;
+    const payments = this.props.payment
+      .split("\n")
+      .slice(0, this.props.noOfPayments);
+    const detail = this.props.detail;
+    const PaymentList = () => (
+      <div className="container-fluid">
+        <p className="paytext">
+          It would take <b> {this.props.noOfPayments} payments</b> to even out
+          all debts:
+        </p>
+        <table border="1" style={{ width: "365px" }}>
+          <tbody>
+            {payments &&
+              payments.map((item, id) => {
+                console.log(item);
+                return (
+                  <tr key={id}>
+                    <td className="paymentcol">{item.split(",")[0]}</td>
+                    <td className="paymentcol">
+                      {" "}
+                      <img
+                        src={require("../newarrow.jpg")}
+                        alt="start"
+                        className="payarrow"
+                      />
+                    </td>
+                    <td className="paymentcol">{item.split(",")[1]}</td>
+                    <td className="paymentcol">
+                      <img
+                        src={require("../payarrow.jpg")}
+                        alt="start"
+                        className="payerarrow"
+                      />
+                    </td>
+                    <td className="paymentcol">{item.split(",")[2]}</td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Expenses</th>
+              <th>Total Spent</th>
+            </tr>
+          </thead>
+          <tbody>
+            {detail &&
+              detail.map((item, id) => {
+                console.log(item);
+                return (
+                  <tr key={id}>
+                    <td>{item.split(",")[3].substring(7)}</td>
+                    <td>{item.split(",")[2].substring(12)}</td>
+                    <td>
+                      {item.split(",")[1].substring(7) === "None"
+                        ? 0
+                        : item.split(",")[1].substring(7)}
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      </div>
+    );
 
     const Lazy = lazy(
       () =>
@@ -29,8 +98,12 @@ class Compute extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log(state);
   return {
-    payment: state.payment.data
+    payment: state.payment.data,
+    noOfPayments: state.payment.data.split("\n").length - 1,
+    count: state.expense.data1.count,
+    detail: state.payment.detail
   };
 };
 
