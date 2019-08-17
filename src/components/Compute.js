@@ -20,9 +20,9 @@ class Compute extends Component {
         </p>
         <table border="1" style={{ width: "365px" }}>
           <tbody>
-            {payments &&
+            {this.props.payment &&
+            this.props.payment !== "No debt. Everything balances!" ? (
               payments.map((item, id) => {
-                console.log(item);
                 return (
                   <tr key={id}>
                     <td className="paymentcol">{item.split(",")[0]}</td>
@@ -45,36 +45,49 @@ class Compute extends Component {
                     <td className="paymentcol">{item.split(",")[2]}</td>
                   </tr>
                 );
-              })}
+              })
+            ) : (
+              <div className="zerobal">No debt. Everything balances!</div>
+            )}
           </tbody>
         </table>
 
-        <table border="1">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Expenses</th>
-              <th>Total Spent</th>
-            </tr>
-          </thead>
-          <tbody>
-            {detail &&
-              detail.map((item, id) => {
-                console.log(item);
-                return (
-                  <tr key={id}>
-                    <td>{item.split(",")[3].substring(7)}</td>
-                    <td>{item.split(",")[2].substring(12)}</td>
-                    <td>
-                      {item.split(",")[1].substring(7) === "None"
-                        ? 0
-                        : item.split(",")[1].substring(7)}
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
+        <div>
+          <div className="detaildiv">
+            <b>Details:</b>
+          </div>
+          <table border="1">
+            <thead>
+              <tr>
+                <th className="detailth">Name</th>
+                <th className="detailth">Expenses+</th>
+                <th className="detailth">Total Spent</th>
+              </tr>
+            </thead>
+            <tbody>
+              {detail &&
+                detail.map((item, id) => {
+                  console.log(item);
+                  return (
+                    <tr key={id}>
+                      <td className="detailtd">
+                        {item.split(",")[3].substring(7)}
+                      </td>
+                      <td className="detailtd">
+                        {item.split(",")[2].substring(12)}
+                      </td>
+                      <td className="detailtd">
+                        {item.split(",")[1].substring(7) === "None"
+                          ? 0
+                          : item.split(",")[1].substring(7)}
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+          <div>+ Number of expenses paid</div>
+        </div>
       </div>
     );
 
@@ -83,7 +96,7 @@ class Compute extends Component {
         new Promise(resolve => {
           setTimeout(() => {
             resolve({ default: () => <PaymentList /> });
-          }, 1000);
+          }, 1200);
         })
     );
 

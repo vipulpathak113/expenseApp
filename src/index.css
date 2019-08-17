@@ -317,3 +317,25 @@ input[class*="inpt"] {
   margin-right: 1px;
   cursor: auto;
 }
+
+.detailtd {
+  width: 120px;
+  font-size: 13px;
+  color: navy;
+  text-align: center;
+  font-weight: 600;
+}
+
+.detailth {
+  text-align: center;
+  background-color: lightblue;
+}
+.detaildiv {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.zerobal {
+  background: aliceblue;
+  font-size: large;
+}
