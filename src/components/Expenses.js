@@ -48,7 +48,7 @@ class Expense extends Component {
         selectedValue:10,
         nonevensplit:'',
         quant:'',
-        checkAll: false
+        checkAll: false,
     }
 }
 
@@ -65,12 +65,18 @@ class Expense extends Component {
         const paidTo = this.state.paidTo
         let index
         if (e.target.checked) {
-            paidTo.push(this.props.persons[e.target.value].nickname)
-            console.log(this.state.paidTo)
+            this.setState({stateUpdate:1})
+            console.log(this.state.stateUpdate)
+            if(this.state.stateUpdate===undefined || this.state.stateUpdate===1){
+                paidTo.push(this.props.persons[e.target.value].nickname+"-"+1)
+            }
+            else{
+            paidTo.push(this.props.persons[e.target.value].nickname)}
         } else {
+            this.setState({stateUpdate:''})
+            console.log(this.state.stateUpdate)
             index = paidTo.indexOf(this.props.persons[e.target.value].nickname)
             paidTo.splice(index, 1)
-            console.log(this.state.paidTo)
         }
         this.setState({ paidTo: paidTo })
     }
@@ -375,7 +381,15 @@ class Expense extends Component {
 		if(amount.trim()==""){
 			document.getElementById("reqTxtamount").innerHTML="Amount is required";
 			returnValue=false;
-		}								
+        }			
+        
+        if ($(".checkin:checked").length < 1) {
+            console.log($(".checkin:checked").length)
+            
+            document.getElementById("reqchckbox").innerHTML="Atleast one person should be selected";
+            returnValue=false;
+        }
+
 		return returnValue;
 	}
 
@@ -502,12 +516,12 @@ class Expense extends Component {
                         </tr>
                         {field && field.map((item, id) => {
                             return (
-                                <tr key={id}>
+                                <tr key={id} style={{background:item[1]==="Debt Paid"?"lightgreen":"lavender"}}>
                                     <td>
                                         <input type="checkbox" value={id} onChange={this.onToggleEdit.bind(this)} className="selectCheckboxDel" name="delchck" />
                                         <button onClick={this.editMode.bind(this, id)}>Edit</button></td>
                                     <td><center className="dateexp">{new Date(Date.parse(item[0])).toDateString().substring(3, 18)}</center></td>
-                                    <td><center>{item[1]}</center></td>
+                                    <td><center>{item[1]==="Debt Paid"?<b style={{color:"green"}}>Debt Paid</b>:item[1]}</center></td>
                                     <td><center>{item[2]}</center></td>
                                     <td><center>{item[3]}</center></td>
                                     <td><center>{item[4] && item[4].map((name,id) => {
@@ -595,6 +609,8 @@ class Expense extends Component {
                                                 name="expWho"
                                                 onChange={this.onToggle.bind(this)}
                                                 style={{ 'marginLeft': '10px' }}
+                                                className="checkin"
+                                                required
                                                 /> {item.nickname} 
                                                 {
                                                     this.state.paidTo.some( res => res.includes(item.nickname)) ?
@@ -617,6 +633,7 @@ class Expense extends Component {
                                 })}
                                 {/* <span onClick={this.nonEvenSplit.bind(this)}>non-even split</span> */}
                             </div>
+                            <span id="reqchckbox" className="reqError"></span>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button
@@ -672,7 +689,7 @@ class Expense extends Component {
                                         <span className="paidradio" key={id}>
                                             <input type="checkbox"
                                                     checked={this.state.paidTo.some( res => res.includes(item.nickname))}
-                                                   id={item.nickname} value={id} onChange={this.onToggle.bind(this)} /> {item.nickname}
+                                                   id={item.nickname} value={id} onChange={this.onToggle.bind(this)} className="checkin" required /> {item.nickname}
                                             {
                                                 this.state.paidTo.some( res => res.includes(item.nickname)) ?
                                                 <input type="text"
@@ -692,6 +709,7 @@ class Expense extends Component {
                                     )
                                 })}
                             </div>
+                            <span id="reqchckbox" className="reqError"></span>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="primary"

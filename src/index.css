@@ -339,3 +339,9 @@ input[class*="inpt"] {
   background: aliceblue;
   font-size: large;
 }
+
+.paychck {
+  margin-top: 8px;
+  margin-left: 10px;
+  margin-right: 2px;
+}

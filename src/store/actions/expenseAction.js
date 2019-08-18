@@ -58,6 +58,7 @@ export const filterexpense = expense => {
 };
 
 export const createExpense = expense => {
+  console.log(expense);
   return (dispatch, getState) => {
     axios
       .post("http://127.0.0.1:8000/expense/", expense)

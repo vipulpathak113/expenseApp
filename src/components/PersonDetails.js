@@ -112,15 +112,6 @@ class PersonDetails extends Component {
         }
     }
 
-    handleSelect1() {
-     
-
-            this.props.getAllPayment({expenses:this.props.expenses, persons: this.props.persons1,sheetId: this.state.sheetId})
-
-        this.props.getDetail({sheetId: this.state.sheetId})
-            
-    }
-
 
     deleteSelected() {
         let userRes = window.confirm("Are you sure you want to delete this person");
