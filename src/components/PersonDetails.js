@@ -16,6 +16,7 @@ import Sheets from './Sheets'
 import Compute from './Compute'
 import $ from 'jquery';
 import DraggableModalDialog from './Draggable'
+import { fetchAll } from "../store/actions/expenseAction";
 import { resolve } from "q";
 
 
@@ -104,7 +105,7 @@ class PersonDetails extends Component {
 
         if(value==="payment"){
 
-            this.props.getAllPayment({expenses:this.props.expenses, persons: this.props.persons1,sheetId: this.state.sheetId})
+            this.props.getAllPayment({expenses:this.props.allExpense, persons: this.props.persons1,sheetId: this.state.sheetId})
 
         this.props.getDetail({sheetId: this.state.sheetId})
             
@@ -312,7 +313,7 @@ if(this.props.persons1&&this.state.nickname ){
 }
 
     render() {
-
+console.log(this.props.loading)
 
         const persons = this.props.persons1;
 
@@ -482,7 +483,9 @@ const mapStateToProps = (state, ownProps) => {
         personError: state.person.personError,
         persons: state.person.data,
         persons1: state.person.data1,
-        expenses:state.expense.data1.expenses
+        expenses:state.expense.data1.expenses,
+        allExpense: state.expense.allexpense,
+        loading: state.payment.isLoading
     }
 }
 

@@ -1,6 +1,7 @@
 const initState = {
   data: "",
-  detail: ""
+  detail: "",
+  isLoading: true
 };
 
 const paymentReducer = (state = initState, action) => {
@@ -8,7 +9,8 @@ const paymentReducer = (state = initState, action) => {
     case "FETCH_ALL_PAYMENT":
       return {
         ...state,
-        data: action.payload
+        data: action.payload,
+        isLoading: false
       };
     case "FETCH_DETAIL":
       return {

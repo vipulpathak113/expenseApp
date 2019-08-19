@@ -297,7 +297,7 @@ class Expense extends Component {
               this.props.allexpense({id:id,currentPage:1})
               this.setState({currentPage:1});
           } else {
-              
+            this.setState({currentPage:1});
               this.props.filterexpense({sheetId:this.state.sheetId,value:e.target.value,selectValue:this.state.selectValue})
           }
 
@@ -402,6 +402,7 @@ class Expense extends Component {
         this.props.allexpense({id:id,currentPage:this.state.currentPage})
     }
     render() {
+        console.log(Math.ceil(this.props.count /10))
 
         const field = this.props.expenses?this.props.expenses:"";
         var arr2=[]
@@ -485,7 +486,7 @@ class Expense extends Component {
               </button>
               <button
                 type="button"
-                id={this.props.count?Math.ceil(this.props.count) /10:""}
+                id={this.props.count?Math.ceil(this.props.count /10):""}
                 style={{
                   display:
                   this.props.count=== undefined || Math.ceil(this.props.count /10) === this.state.currentPage || this.props.count< this.state.selectedValue

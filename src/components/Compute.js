@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { PushSpinner } from "react-spinners-kit";
 import { createExpense } from "../store/actions/expenseAction";
 import { getAllPayment } from "../store/actions/paymentAction";
+import { fetchAll } from "../store/actions/expenseAction";
 
 class Compute extends Component {
   constructor(props) {
@@ -26,6 +27,8 @@ class Compute extends Component {
     this.setState({
       sheetId: id
     });
+
+    this.props.fetchAll({ sheetId: id });
   }
 
   markPaid() {
@@ -41,7 +44,7 @@ class Compute extends Component {
     });
 
     this.props.getAllPayment({
-      expenses: this.props.expenses,
+      expenses: this.props.allExpense,
       persons: this.props.persons1,
       sheetId: this.state.sheetId
     });
@@ -85,16 +88,17 @@ class Compute extends Component {
   }
 
   render() {
-    console.log(this.state);
+    console.log(this.props.loading);
     const payments = this.props.payment
       .split("\n")
       .slice(0, this.props.noOfPayments);
-    console.log(payments);
+    console.log(this.props.noOfPayments);
     const detail = this.props.detail;
-
     return (
       <div>
-        <Suspense fallback={<PushSpinner size={30} color="#686769" />}>
+        {this.props.loading ? (
+          <div>Loading...</div>
+        ) : (
           <div className="container-fluid">
             <p className="paytext">
               It would take <b> {this.props.noOfPayments} payments</b> to even
@@ -143,21 +147,25 @@ class Compute extends Component {
               </tbody>
             </table>
             <table border="1" style={{ width: "364px", height: "31px" }}>
-              <tr>
-                <td style={{ border: "0", textAlign: "end" }}>Select:</td>
-                <td style={{ border: 0 }}>
-                  <button
-                    variant="primary"
-                    size="sm"
-                    type="button"
-                    onClick={this.markPaid.bind(this)}
-                    disabled={this.state.isSelected}
-                    style={{ marginLeft: "189px" }}
-                  >
-                    Mark Selected as Paid
-                  </button>
-                </td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td style={{ border: "0", textAlign: "end" }}>Select:</td>
+                  <td style={{ border: 0 }}>
+                    <button
+                      variant="primary"
+                      size="sm"
+                      type="button"
+                      onClick={this.markPaid.bind(this)}
+                      disabled={
+                        this.state.isSelected || this.props.noOfPayments < 1
+                      }
+                      style={{ marginLeft: "189px" }}
+                    >
+                      Mark Selected as Paid
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
             </table>
             <div>
               <div className="detaildiv">
@@ -196,7 +204,7 @@ class Compute extends Component {
               <div>+ Number of expenses paid</div>
             </div>
           </div>
-        </Suspense>
+        )}
       </div>
     );
   }
@@ -210,7 +218,9 @@ const mapStateToProps = (state, ownProps) => {
     count: state.expense.data1.count,
     detail: state.payment.detail,
     persons1: state.person.data1,
-    expenses: state.expense.data1.expenses
+    expenses: state.expense.data1.expenses,
+    allExpense: state.expense.allexpense,
+    loading: state.payment.isLoading
   };
 };
 
@@ -218,7 +228,8 @@ const mapDispatchToProps = dispatch => {
   return {
     allexpense: expense => dispatch(allexpense(expense)),
     createExpense: expense => dispatch(createExpense(expense)),
-    getAllPayment: payment => dispatch(getAllPayment(payment))
+    getAllPayment: payment => dispatch(getAllPayment(payment)),
+    fetchAll: payment => dispatch(fetchAll(payment))
   };
 };
 

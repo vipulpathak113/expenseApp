@@ -15,6 +15,16 @@ export const getAllExpenses = expense => {
   };
 };
 
+export const fetchAll = expense => {
+  return dispatch => {
+    axios
+      .get(`http://127.0.0.1:8000/expense/all/?pk=${expense.sheetId}`)
+      .then(response => {
+        dispatch({ type: "FETCH_NEW", payload: response.data });
+      });
+  };
+};
+
 export const getfilterexpense = expense => {
   return dispatch => {
     axios

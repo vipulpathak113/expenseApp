@@ -2,7 +2,8 @@ const initState = {
   expenseSuccess: null,
   expenseError: null,
   data: "",
-  data1: ""
+  data1: "",
+  allexpense: ""
 };
 
 const expenseReducer = (state = initState, action) => {
@@ -22,6 +23,9 @@ const expenseReducer = (state = initState, action) => {
 
     case "FETCH_EXPENSES":
       return { ...state, data1: action.payload };
+
+    case "FETCH_NEW":
+      return { ...state, allexpense: action.payload };
 
     case "FETCH_ALL_EXPENSES":
       return { ...state, data1: action.payload };

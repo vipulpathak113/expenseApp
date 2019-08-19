@@ -3,6 +3,7 @@ import axios from "axios";
 var _ = require("lodash");
 
 export const getAllPayment = payment => {
+  console.log(payment);
   var url =
     "https://cors-anywhere.herokuapp.com/http://www.shortreckonings.com/api/1.0/query.php?";
   return dispatch => {
