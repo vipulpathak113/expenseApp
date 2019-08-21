@@ -71,7 +71,10 @@ class Compute extends Component {
       sheetId: id,
       currentPage: this.props.currentPage
     });
-    $(`.paymentcol${this.state.value}`).css("textDecoration", "line-through");
+    $(`.paymentcol${this.state.value}`).css({
+      textDecoration: "line-through",
+      color: "red"
+    });
     this.props.fetchAll({ sheetId: id });
 
     this.props.getAllPayment({
@@ -87,6 +90,24 @@ class Compute extends Component {
     });
 
     this.setState({ paidTo: [] });
+  }
+
+  unCheck() {
+    var ckName = document.getElementsByName("newchck");
+    var checked = document.getElementById(this.state.value);
+
+    if (checked) {
+      if (checked.checked) {
+        for (var i = 0; i < ckName.length; i++) {
+          if (!ckName[i].checked) {
+          } else {
+            ckName[i].checked = false;
+            this.setState({ paidTo: [] });
+          }
+        }
+      } else {
+      }
+    }
   }
 
   onToggleEdit1(e) {
@@ -177,7 +198,7 @@ class Compute extends Component {
                             type="checkbox"
                             value={id}
                             onChange={this.onToggleEdit1.bind(this)}
-                            className={`paychck${id}`}
+                            className="paychck"
                             name="newchck"
                           />
                         </td>
@@ -211,27 +232,30 @@ class Compute extends Component {
                 )}
               </tbody>
             </table>
-            <table border="1" style={{ width: "364px", height: "31px" }}>
-              <tbody>
-                <tr>
-                  <td style={{ border: "0", textAlign: "end" }}>Select:</td>
-                  <td style={{ border: 0 }}>
-                    <button
-                      variant="primary"
-                      size="sm"
-                      type="button"
-                      onClick={this.markPaid.bind(this)}
-                      disabled={
-                        this.state.isSelected || this.props.noOfPayments < 1
-                      }
-                      style={{ marginLeft: "189px" }}
-                    >
-                      Mark Selected as Paid
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            {this.props.noOfPayments >= 1 ? (
+              <div style={{ marginTop: "5px" }}>
+                <span style={{ border: "0", textAlign: "end" }}>
+                  <b>Select: </b>
+                  <a className="unchck" onClick={this.unCheck.bind(this)}>
+                    <u>Uncheck</u>
+                  </a>
+                </span>
+                <span style={{ border: 0 }}>
+                  <button
+                    variant="primary"
+                    size="sm"
+                    type="button"
+                    onClick={this.markPaid.bind(this)}
+                    disabled={
+                      this.state.isSelected || this.props.noOfPayments < 1
+                    }
+                    style={{ marginLeft: "119px" }}
+                  >
+                    Mark Selected as Paid
+                  </button>
+                </span>
+              </div>
+            ) : null}
             <div>
               <div className="detaildiv">
                 <b>Details:</b>

@@ -333,7 +333,8 @@ callbackHandlerFunction = (page) => {
                     onSelect={(key) => this.handleSelect(key)}>
                     <Tab eventKey="group" title="Create Group" >
                     <Suspense fallback={ <div>Loading...</div> }>
-                    <table border="1">
+                    <table border="1" style={{marginTop: "6px",
+                        marginLeft: "1px"}}>
                     <thead>
                         <tr className="rowContent">
                             <th><center><input type="checkbox" disabled={persons?!(persons.length > 1):""} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" checked={this.state.chckall} name="chckall" />Action</center></th>

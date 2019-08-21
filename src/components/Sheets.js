@@ -80,7 +80,7 @@ class Sheets extends Component {
           </b>
           <b>-{sheets ? sheets.description : ""}</b>
           <a onClick={this.editSheet.bind(this)} className="edit">
-            <u style={{ marginLeft: "30px" }}>Edit</u>
+            <u style={{ marginLeft: "12px" }}>Edit</u>
           </a>
         </div>
         <div className="created">
