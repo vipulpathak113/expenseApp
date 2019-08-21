@@ -15,7 +15,8 @@ const paymentReducer = (state = initState, action) => {
     case "FETCH_DETAIL":
       return {
         ...state,
-        detail: action.payload
+        detail: action.payload,
+        isLoading: true
       };
     default:
       return state;

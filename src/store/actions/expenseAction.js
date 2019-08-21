@@ -68,7 +68,6 @@ export const filterexpense = expense => {
 };
 
 export const createExpense = expense => {
-  console.log(expense);
   return (dispatch, getState) => {
     axios
       .post("http://127.0.0.1:8000/expense/", expense)
@@ -83,6 +82,12 @@ export const createExpense = expense => {
             )
             .then(response => {
               dispatch({ type: "FETCH_ALL_EXPENSES", payload: response.data });
+            });
+
+          axios
+            .get(`http://127.0.0.1:8000/expense/all/?pk=${expense.sheetId}`)
+            .then(response => {
+              dispatch({ type: "FETCH_NEW", payload: response.data });
             });
 
           axios
@@ -127,6 +132,18 @@ export const updateExpense = expense => {
             .then(response => {
               dispatch({ type: "FETCH_ALL_EXPENSES", payload: response.data });
             });
+
+          axios
+            .get(`http://127.0.0.1:8000/expense/all/?pk=${expense.sheetId}`)
+            .then(response => {
+              dispatch({ type: "FETCH_NEW", payload: response.data });
+            });
+
+          axios
+            .get(`http://127.0.0.1:8000/expense/payment/?pk=${expense.sheetId}`)
+            .then(response => {
+              dispatch({ type: "FETCH_PAYMENTS", payload: response.data });
+            });
         }
       })
       .catch(err => {
@@ -163,6 +180,12 @@ export const deleteExpense = expense => {
                 )
                 .then(response => {
                   dispatch({ type: "FETCH_PAYMENTS", payload: response.data });
+                });
+
+              axios
+                .get(`http://127.0.0.1:8000/expense/all/?pk=${expense.sheetId}`)
+                .then(response => {
+                  dispatch({ type: "FETCH_NEW", payload: response.data });
                 });
             }
           })

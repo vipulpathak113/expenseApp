@@ -45,6 +45,8 @@ class PersonDetails extends Component {
             isSelected: true,
             expenses:'',
             chckall: false,
+            ischckSelected: false,
+            page:1
         }
     }
 
@@ -99,16 +101,17 @@ class PersonDetails extends Component {
     }
 
     handleSelect(value) {
+        var id = window.location.pathname.substring(7, 9);
         this.setState({
             key: value,
         });
 
         if(value==="payment"){
+            this.props.fetchAll({ sheetId: id });
 
             this.props.getAllPayment({expenses:this.props.allExpense, persons: this.props.persons1,sheetId: this.state.sheetId})
 
         this.props.getDetail({sheetId: this.state.sheetId})
-            
 
         }
     }
@@ -189,7 +192,6 @@ class PersonDetails extends Component {
     async saveAndNew(e) {
         e.preventDefault();
         this.checkSameNickName();
-        console.log(this.checkSameNickName())
         this.checkReqFieldsName();
         this.checkReqFieldsNickName();
         if(this.checkReqFieldsName()===true&& this.checkReqFieldsNickName()===true){
@@ -312,8 +314,13 @@ if(this.props.persons1&&this.state.nickname ){
     return s && s[0].toUpperCase() + s.slice(1);
 }
 
+callbackHandlerFunction = (page) => {
+    this.setState({
+        page:page
+    })
+}
+
     render() {
-console.log(this.props.loading)
 
         const persons = this.props.persons1;
 
@@ -338,7 +345,7 @@ console.log(this.props.loading)
                     <tbody>
 {persons?persons.map((item, id) => {
     return (
-        <tr key={id}>
+        <tr key={id} style={{background:"lavender"}}>
             <td><center>
                 <input type="checkbox" id="check" value={id} onChange={this.onToggle.bind(this)} className="selectCheckbox" name="delchck"/>
                 <button onClick={this.editMode.bind(this, id)}>Edit</button>
@@ -388,11 +395,13 @@ console.log(this.props.loading)
                             persons={this.props.persons1}
                             handleSelect={this.handleSelect.bind(this)}
                             isComputeDisabled={this.state.isComputeDisabled}
+                            currentPage={this.callbackHandlerFunction}
                             />
                     </Tab>
                     <Tab eventKey="payment" title="Compute Payments"
                      disabled={this.props.expenses?!this.props.expenses.length >= 1:true}>
-                    <Compute/>
+                    <Compute chckSelected={this.state.ischckSelected} currentPage={this.state.page}/>
+
                     </Tab>
                 </Tabs>
 
@@ -478,7 +487,6 @@ console.log(this.props.loading)
     }
 }
 const mapStateToProps = (state, ownProps) => {
-    console.log(state)
     return {
         personError: state.person.personError,
         persons: state.person.data,
@@ -497,7 +505,8 @@ const mapDispatchToProps = (dispatch) => {
         getAllPersons: (id) => dispatch(getAllPersons(id)),
         updateSheet: (sheet) => dispatch(updateSheet(sheet)),
         getAllPayment: (payment)=>dispatch(getAllPayment(payment)),
-        getDetail:(payment)=>dispatch(getDetail(payment))
+        getDetail:(payment)=>dispatch(getDetail(payment)),
+        fetchAll: payment => dispatch(fetchAll(payment))
     }
 }
 

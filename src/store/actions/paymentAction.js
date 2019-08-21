@@ -3,7 +3,6 @@ import axios from "axios";
 var _ = require("lodash");
 
 export const getAllPayment = payment => {
-  console.log(payment);
   var url =
     "https://cors-anywhere.herokuapp.com/http://www.shortreckonings.com/api/1.0/query.php?";
   return dispatch => {
@@ -65,12 +64,10 @@ export const getAllPayment = payment => {
 };
 
 export const getDetail = payment => {
-  console.log(payment);
   return dispatch => {
     axios
       .get(`http://127.0.0.1:8000/expense/detail/?pk=${payment.sheetId}`)
       .then(response => {
-        console.log(response);
         dispatch({ type: "FETCH_DETAIL", payload: response.data });
       });
   };

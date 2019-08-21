@@ -5,7 +5,7 @@ import ModalDialog from "react-bootstrap/ModalDialog";
 class DraggableModalDialog extends React.Component {
   render() {
     return (
-      <Draggable handle=".modalheader">
+      <Draggable handle=".modalheader" scale={1}>
         <ModalDialog {...this.props} />
       </Draggable>
     );

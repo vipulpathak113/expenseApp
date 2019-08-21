@@ -9,6 +9,7 @@ import {getAllExpenses} from '../store/actions/expenseAction'
 import {getfilterexpense} from '../store/actions/expenseAction'
 import {filterexpense} from '../store/actions/expenseAction' 
 import {allexpense} from '../store/actions/expenseAction' 
+import { fetchAll } from "../store/actions/expenseAction";
 import { connect } from 'react-redux'
 import $ from 'jquery';
 import DraggableModalDialog from './Draggable'
@@ -66,7 +67,6 @@ class Expense extends Component {
         let index
         if (e.target.checked) {
             this.setState({stateUpdate:1})
-            console.log(this.state.stateUpdate)
             if(this.state.stateUpdate===undefined || this.state.stateUpdate===1){
                 paidTo.push(this.props.persons[e.target.value].nickname+"-"+1)
             }
@@ -74,7 +74,6 @@ class Expense extends Component {
             paidTo.push(this.props.persons[e.target.value].nickname)}
         } else {
             this.setState({stateUpdate:''})
-            console.log(this.state.stateUpdate)
             index = paidTo.indexOf(this.props.persons[e.target.value].nickname)
             paidTo.splice(index, 1)
         }
@@ -101,11 +100,8 @@ class Expense extends Component {
         this.setState(stateUpdate);
         index = newIds.indexOf(this.props.persons[e.target.id].nickname)
         newIds.splice(index, 1)
-        console.log(newIds)
         newIds.push(this.props.persons[e.target.id].nickname+"-"+e.target.value)
-        console.log(newIds)
         this.setState({paidTo: newIds})
-        console.log(this.state.paidTo)
     }
 
     Sclose() {
@@ -200,7 +196,15 @@ class Expense extends Component {
     deleteSelected() {
         alert("Are you sure you want to delete this expense");
 
-        this.props.deleteExpense({ items: this.state.items,expenses:this.props.expenses,sheetId: this.state.sheetId,currentPage:this.state.currentPage });
+
+        if(this.props.expenses.length===1&& this.state.currentPage!==1){
+            this.setState({currentPage:this.state.currentPage-1})
+            this.props.deleteExpense({ items: this.state.items,expenses:this.props.expenses,sheetId: this.state.sheetId,currentPage:this.state.currentPage-1 }); 
+        }
+else{
+    this.props.deleteExpense({ items: this.state.items,expenses:this.props.expenses,sheetId: this.state.sheetId,currentPage:this.state.currentPage });
+
+}
     
         if (this.props.expenses && this.props.expenses.length < 1) {
             this.setState({
@@ -208,6 +212,9 @@ class Expense extends Component {
             });
         }
 
+        this.setState({
+            isSelected:true
+        })
         $('input[name=delchck]').prop('checked', false);
     }
 
@@ -384,14 +391,19 @@ class Expense extends Component {
         }			
         
         if ($(".checkin:checked").length < 1) {
-            console.log($(".checkin:checked").length)
             
             document.getElementById("reqchckbox").innerHTML="Atleast one person should be selected";
             returnValue=false;
         }
 
 		return returnValue;
-	}
+    }
+    
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.currentPage !== this.state.currentPage) {
+            this.props.currentPage(this.state.currentPage);
+        }
+      }
 
 
     componentDidMount() {
@@ -402,7 +414,7 @@ class Expense extends Component {
         this.props.allexpense({id:id,currentPage:this.state.currentPage})
     }
     render() {
-        console.log(Math.ceil(this.props.count /10))
+       
 
         const field = this.props.expenses?this.props.expenses:"";
         var arr2=[]
@@ -412,13 +424,12 @@ class Expense extends Component {
    var arr3= [...new Set(arr2)]
         return (
             <div>
-            
             <div style={{ padding: '5px' }}>
-            <span>Filter By </span>
+            <span className="filter-rows">Filter By </span>
             <select className="mdb-select md-form"
                     value={this.state.selectValue}
                     onChange={this.handleSelection.bind(this)}
-                    style={{"marginRight": "24px"}}
+                    style={{"marginRight": "24px",marginLeft: "3px"}}
                     >
                     <option value="all" >Anyone</option>
             {arr3 && arr3.map((item, id) => {
@@ -428,11 +439,11 @@ class Expense extends Component {
                 </select>
 
 
-                <span>Rows </span>
+                <span className="filter-rows">Rows </span>
             <select className="mdb-select md-form"
                     value={this.state.selectedValue} 
                     onChange={this.filterSelection.bind(this)}
-                    style={{"marginRight": "24px"}}
+                    style={{"marginRight": "24px",marginLeft: "3px"}}
                     >
                     <option value="10" >10</option>
                     <option value="25" >25</option>
@@ -508,14 +519,14 @@ class Expense extends Component {
                 <table border="1">
                     <thead>
                         <tr className="rowContent">
-                            <th><center><input type="checkbox" disabled={field?!(field.length > 1):""} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" />Action</center></th>
+                            <th><center><input type="checkbox" disabled={field?!(field.length > 1):""} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox"/>Action</center></th>
                             <th><center>Date</center></th>
                             <th><center>Description</center></th>
                             <th><center>Who Paid?</center></th>
                             <th><center>Amount</center></th>
                             <th><center>For Whom</center></th>
                         </tr>
-                        {field && field.map((item, id) => {
+                        {field? field.map((item, id) => {
                             return (
                                 <tr key={id} style={{background:item[1]==="Debt Paid"?"lightgreen":"lavender"}}>
                                     <td>
@@ -532,7 +543,7 @@ class Expense extends Component {
                                     })}</center></td>
                                 </tr>
                             )
-                        })}
+                        }):null}
                     </thead>
                 </table>
                 <div style={{ 'marginTop': '15px' }}>>><b>Click On Add Expense to enter the expense. Once done, click Compute Payments.</b></div>
@@ -735,6 +746,7 @@ class Expense extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
+  
     return {
         expenses: state.expense.data1.expenses,
         count: state.expense.data1.count
@@ -749,7 +761,8 @@ const mapDispatchToProps = (dispatch) => {
         getAllExpenses: (expense)=>dispatch (getAllExpenses(expense)),
         getfilterexpense: (expense)=>dispatch(getfilterexpense(expense)),
         filterexpense: (expense)=> dispatch(filterexpense(expense)),
-        allexpense: (expense)=> dispatch(allexpense(expense))
+        allexpense: (expense)=> dispatch(allexpense(expense)),
+        fetchAll: payment => dispatch(fetchAll(payment))
         
     }
 }

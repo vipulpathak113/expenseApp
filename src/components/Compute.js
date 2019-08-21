@@ -6,6 +6,7 @@ import { PushSpinner } from "react-spinners-kit";
 import { createExpense } from "../store/actions/expenseAction";
 import { getAllPayment } from "../store/actions/paymentAction";
 import { fetchAll } from "../store/actions/expenseAction";
+import store from "../store/store";
 
 class Compute extends Component {
   constructor(props) {
@@ -18,7 +19,9 @@ class Compute extends Component {
       paidTo: [],
       sheetId: "",
       currentPage: 1,
-      isSelected: true
+      isSelected: true,
+      ischckSelected: this.props.chckSelected ? this.props.chckSelected : false,
+      value: ""
     };
   }
 
@@ -27,11 +30,37 @@ class Compute extends Component {
     this.setState({
       sheetId: id
     });
-
     this.props.fetchAll({ sheetId: id });
+    this.props.getAllPayment({
+      expenses: this.props.allExpense,
+      persons: this.props.persons1,
+      sheetId: this.state.sheetId
+    });
+
+    console.log("hii");
   }
 
   markPaid() {
+    console.log(this.state.value);
+    var ckName = document.getElementsByName("newchck");
+    var checked = document.getElementById(this.state.value);
+
+    if (checked.checked) {
+      for (var i = 0; i < ckName.length; i++) {
+        if (!ckName[i].checked) {
+          ckName[i].disabled = false;
+        } else {
+          ckName[i].disabled = true;
+        }
+      }
+      this.setState({ isSelected: true });
+    } else {
+      for (var i = 0; i < ckName.length; i++) {
+        ckName[i].disabled = true;
+        this.setState({ isSelected: true });
+      }
+    }
+
     var id = window.location.pathname.substring(7, 9);
     this.props.createExpense({
       description: this.state.description,
@@ -40,7 +69,15 @@ class Compute extends Component {
       paidBy: this.state.paidBy,
       paidTo: this.state.paidTo,
       sheetId: id,
-      currentPage: this.state.currentPage
+      currentPage: this.props.currentPage
+    });
+    $(`.paymentcol${this.state.value}`).css("textDecoration", "line-through");
+    this.props.fetchAll({ sheetId: id });
+
+    this.props.getAllPayment({
+      expenses: this.props.allExpense,
+      persons: this.props.persons1,
+      sheetId: this.state.sheetId
     });
 
     this.props.getAllPayment({
@@ -48,31 +85,47 @@ class Compute extends Component {
       persons: this.props.persons1,
       sheetId: this.state.sheetId
     });
+
+    this.setState({ paidTo: [] });
   }
 
   onToggleEdit1(e) {
+    var ckName = document.getElementsByName(e.target.name);
+    var checked = document.getElementById(e.target.value);
+
+    if (checked.checked) {
+      for (var i = 0; i < ckName.length; i++) {
+        if (!ckName[i].checked) {
+          ckName[i].disabled = true;
+        } else {
+          ckName[i].disabled = false;
+        }
+      }
+    } else {
+      for (var i = 0; i < ckName.length; i++) {
+        ckName[i].disabled = false;
+      }
+    }
+
     const payments = this.props.payment
       .split("\n")
       .slice(0, this.props.noOfPayments);
-    console.log(payments[e.target.value]);
     var pay = payments[e.target.value].split(",");
-    console.log(pay);
     var person = this.props.persons1;
 
     var perfil = person.filter(item => item.nickname === pay[0])[0].id;
-    console.log(perfil);
 
     var paidTo = this.state.paidTo;
     let index;
     if (e.target.checked) {
-      console.log(pay[0]);
       paidTo.push(pay[2] + "-" + 1);
       this.setState({
         paidBy: perfil,
         description: "Debt Paid",
         paidTo: paidTo,
         amount: pay[1],
-        isSelected: false
+        isSelected: false,
+        value: e.target.value
       });
     } else {
       index = paidTo.indexOf(+e.target.value);
@@ -82,29 +135,36 @@ class Compute extends Component {
         description: "",
         paidTo: [],
         amount: "",
-        isSelected: true
+        isSelected: true,
+        value: ""
       });
     }
   }
 
   render() {
-    console.log(this.props.loading);
+    console.log(this.state.paidTo);
     const payments = this.props.payment
       .split("\n")
       .slice(0, this.props.noOfPayments);
-    console.log(this.props.noOfPayments);
     const detail = this.props.detail;
     return (
       <div>
         {this.props.loading ? (
-          <div>Loading...</div>
+          <img src={require("../pacman.svg")} alt="loader" />
         ) : (
           <div className="container-fluid">
             <p className="paytext">
               It would take <b> {this.props.noOfPayments} payments</b> to even
               out all debts:
             </p>
-            <table border="1" style={{ width: "365px", height: "80px" }}>
+            <table
+              border="1"
+              style={{
+                width: "365px",
+                height: "80px",
+                backgroundColor: "white"
+              }}
+            >
               <tbody>
                 {this.props.payment &&
                 this.props.payment !== "No debt. Everything balances!" ? (
@@ -113,11 +173,12 @@ class Compute extends Component {
                       <tr key={id}>
                         <td style={{ border: 0 }}>
                           <input
+                            id={id}
                             type="checkbox"
                             value={id}
                             onChange={this.onToggleEdit1.bind(this)}
-                            className="paychck"
-                            name="delchck"
+                            className={`paychck${id}`}
+                            name="newchck"
                           />
                         </td>
                         <td className="paymentcol">{item.split(",")[0]}</td>
@@ -129,7 +190,9 @@ class Compute extends Component {
                             className="payarrow"
                           />
                         </td>
-                        <td className="paymentcol">{item.split(",")[1]}</td>
+                        <td className={`paymentcol${id}`}>
+                          {item.split(",")[1]}
+                        </td>
                         <td className="paymentcol">
                           <img
                             src={require("../payarrow.jpg")}
@@ -142,7 +205,9 @@ class Compute extends Component {
                     );
                   })
                 ) : (
-                  <div className="zerobal">No debt. Everything balances!</div>
+                  <tr className="zerobal">
+                    <td>No debt. Everything balances!</td>
+                  </tr>
                 )}
               </tbody>
             </table>
@@ -180,28 +245,30 @@ class Compute extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {detail &&
-                    detail.map((item, id) => {
-                      console.log(item);
-                      return (
-                        <tr key={id}>
-                          <td className="detailtd">
-                            {item.split(",")[3].substring(7)}
-                          </td>
-                          <td className="detailtd">
-                            {item.split(",")[2].substring(12)}
-                          </td>
-                          <td className="detailtd">
-                            {item.split(",")[1].substring(7) === "None"
-                              ? 0
-                              : item.split(",")[1].substring(7)}
-                          </td>
-                        </tr>
-                      );
-                    })}
+                  {detail
+                    ? detail.map((item, id) => {
+                        return (
+                          <tr key={id} style={{ background: "lavender" }}>
+                            <td className="detailtd">
+                              {item.split(",")[3].substring(7)}
+                            </td>
+                            <td className="detailtd">
+                              {item.split(",")[2].substring(12)}
+                            </td>
+                            <td className="detailtd">
+                              {item.split(",")[1].substring(7) === "None"
+                                ? 0
+                                : item.split(",")[1].substring(7)}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    : null}
                 </tbody>
               </table>
-              <div>+ Number of expenses paid</div>
+              <div style={{ fontWeight: "500", fontStyle: "italic" }}>
+                + Number of expenses paid
+              </div>
             </div>
           </div>
         )}
@@ -211,7 +278,7 @@ class Compute extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state);
+  console.log(ownProps);
   return {
     payment: state.payment.data,
     noOfPayments: state.payment.data.split("\n").length - 1,
