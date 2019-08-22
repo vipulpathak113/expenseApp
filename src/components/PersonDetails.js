@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { Component, lazy, Suspense } from "react";
+import React, { Component } from "react";
 import { connect } from 'react-redux'
 import { Button, Modal } from 'react-bootstrap';
 import { createPerson } from '../store/actions/addPersonAction'
@@ -8,6 +8,7 @@ import { deletePerson } from '../store/actions/addPersonAction'
 import {getAllPersons} from '../store/actions/addPersonAction'
 import {getAllPayment} from '../store/actions/paymentAction'
 import {getDetail} from '../store/actions/paymentAction'
+import {allexpense} from '../store/actions/expenseAction' 
 import { updateSheet } from '../store/actions/sheetAction'
 import { Tab, Tabs } from 'react-bootstrap';
 import Expense from './Expenses'
@@ -106,6 +107,12 @@ class PersonDetails extends Component {
             key: value,
         });
 
+
+        if(value==="expense"){
+
+        this.props.allexpense({id:id,currentPage:this.state.page})
+        }
+
         if(value==="payment"){
             this.props.fetchAll({ sheetId: id });
 
@@ -174,8 +181,10 @@ class PersonDetails extends Component {
 
     async save(e) {
         e.preventDefault();
-        this.checkReqFields();
-        if(this.checkReqFields()===true){
+        this.checkSameNickName();
+        this.checkReqFieldsName();
+        this.checkReqFieldsNickName();
+        if(this.checkReqFieldsName()===true&& this.checkReqFieldsNickName()===true&&this.checkSameNickName()===true){
         this.props.createPerson({ name: this.state.name,
              nickname: this.state.nickname,
               comment: this.state.comment,
@@ -194,7 +203,7 @@ class PersonDetails extends Component {
         this.checkSameNickName();
         this.checkReqFieldsName();
         this.checkReqFieldsNickName();
-        if(this.checkReqFieldsName()===true&& this.checkReqFieldsNickName()===true){
+        if(this.checkReqFieldsName()===true&& this.checkReqFieldsNickName()===true&&this.checkSameNickName()===true){
         this.props.createPerson({ name: this.state.name, 
         nickname: this.state.nickname,
          comment: this.state.comment, 
@@ -218,12 +227,15 @@ class PersonDetails extends Component {
             comment: data.comment,
             personId: data.id
         });
+
     }
 
     async saveClose(e) {
-        this.setState({ showModalSave: false });
-        this.checkReqFields();
-        if(this.checkReqFields()===true){
+        e.preventDefault();
+        this.checkSameNickName();
+        this.checkReqFieldsName();
+        this.checkReqFieldsNickName();
+        if(this.checkReqFieldsName()===true&& this.checkReqFieldsNickName()===true&&this.checkSameNickName()===true){
         this.props.updatePerson({ name: this.state.name,
          nickname: this.state.nickname,
         comment: this.state.comment,
@@ -235,6 +247,7 @@ class PersonDetails extends Component {
             comment: '',
         })
     }
+    this.setState({showModalSave: false})
     }
 
     tabChange() {
@@ -264,30 +277,32 @@ class PersonDetails extends Component {
 		var name=document.getElementById("name").value;
 		var nickname=document.getElementById("nickname").value;
 		
-		returnValue=true;
+        returnValue=true;
+        
 		if(name.trim()==""){
-			document.getElementById("errname").innerHTML="*Name is required";
+			document.getElementById('errname').innerHTML="*Name is required";
 			returnValue=false;
 		} else{
-            document.getElementById("errname").innerHTML="";
+            document.getElementById('errname').innerHTML="";
 			returnValue=true;
         }						
-		return returnValue;
+        return returnValue;
     }
     
     checkReqFieldsNickName(){
+       
 		var returnValue;
 		var nickname=document.getElementById("nickname").value;
-	
+    
 		if(nickname.trim()==""){
-			document.getElementById("errdsply").innerHTML="*Nickname is required";
+			document.getElementById('errdsply').innerHTML="*Nickname is required";
 			returnValue=false;
         }
         else{
-            document.getElementById("errdsply").innerHTML="";
+            document.getElementById('errdsply').innerHTML="";
 			returnValue=true;   
         }								
-		return returnValue;
+        return returnValue;
     }
     
 
@@ -296,17 +311,19 @@ if(this.props.persons1&&this.state.nickname ){
     var returnValue;
     var pol=this.state.nickname
     var pname= this.props.persons1.filter(item=>item.nickname===pol).length
-    if(pname>=1){
-        document.getElementById("errdsply").innerHTML="*Nickname already exists";
+    if(pname>1){
+        document.getElementById('errdsply').innerHTML="*Nickname already exists";
         returnValue=false;
     }
     else{
-        document.getElementById("errdsply").innerHTML="";
+        document.getElementById('errdsply').innerHTML="";
         returnValue=true;   
     }								
     return returnValue; 
+}else{}
 }
-	}
+
+
 
 
     capitalize(s)
@@ -332,7 +349,6 @@ callbackHandlerFunction = (page) => {
                 <Tabs activeKey={this.state.key}
                     onSelect={(key) => this.handleSelect(key)}>
                     <Tab eventKey="group" title="Create Group" >
-                    <Suspense fallback={ <div>Loading...</div> }>
                     <table border="1" style={{marginTop: "6px",
                         marginLeft: "1px"}}>
                     <thead>
@@ -358,7 +374,6 @@ callbackHandlerFunction = (page) => {
     )}):null}
 </tbody>
                 </table>
-    </Suspense>
                     
                         <Button
                             variant="primary"
@@ -458,12 +473,15 @@ callbackHandlerFunction = (page) => {
                             <input type="text" 
                             style={{ 'width': '280px', 'marginLeft': '11px' }} 
                             id="name" value={this.state.name}
-                             onChange={this.handleChange.bind(this)}></input></div>
+                             onChange={this.handleChange.bind(this)}></input>
+                             <span id="errname" className="reqError"></span>
+                             </div>
                             <div><span>Display Name </span>
                             <input type="text"
                              style={{ 'marginTop': '25px', 'marginLeft': '10px' }}
                               id="nickname" value={this.state.nickname}
                                onChange={this.handleChange.bind(this)}></input></div>
+                               <span className="reqError" id="errdsply"></span>
                             <div><span className="comment">Comment</span>
                              <input type="text"
                               style={{ 'marginTop': '25px', 'width': '280px' }}
@@ -507,7 +525,8 @@ const mapDispatchToProps = (dispatch) => {
         updateSheet: (sheet) => dispatch(updateSheet(sheet)),
         getAllPayment: (payment)=>dispatch(getAllPayment(payment)),
         getDetail:(payment)=>dispatch(getDetail(payment)),
-        fetchAll: payment => dispatch(fetchAll(payment))
+        fetchAll: payment => dispatch(fetchAll(payment)),
+        allexpense: (expense)=> dispatch(allexpense(expense)),
     }
 }
 

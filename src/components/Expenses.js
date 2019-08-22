@@ -414,8 +414,6 @@ else{
         this.props.allexpense({id:id,currentPage:this.state.currentPage})
     }
     render() {
-       
-
         const field = this.props.expenses?this.props.expenses:"";
         var arr2=[]
      field && field.map(item=>{
@@ -703,11 +701,12 @@ else{
                                                     checked={this.state.paidTo.some( res => res.includes(item.nickname))}
                                                    id={item.nickname} value={id} onChange={this.onToggle.bind(this)} className="checkin" required /> {item.nickname}
                                             {
+                        
                                                 this.state.paidTo.some( res => res.includes(item.nickname)) ?
                                                 <input type="text"
                                                     id={id} 
                                                     onBlur= {this.handleChange1.bind(this)}
-                                                    defaultValue={this.state.paidTo[id]?this.state.paidTo[id].substring(this.state.paidTo[id].indexOf("-")+1):""}
+                                                    defaultValue={this.state.paidTo[0]?this.state.paidTo[0].substring(this.state.paidTo[0].indexOf("-")+1):""}
                                                     style={{width: "30px"}}
                                                     className={`inpt${id}`}
                                                     name={`inpt${id}`}

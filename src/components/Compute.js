@@ -36,12 +36,9 @@ class Compute extends Component {
       persons: this.props.persons1,
       sheetId: this.state.sheetId
     });
-
-    console.log("hii");
   }
 
   markPaid() {
-    console.log(this.state.value);
     var ckName = document.getElementsByName("newchck");
     var checked = document.getElementById(this.state.value);
 
@@ -102,7 +99,7 @@ class Compute extends Component {
           if (!ckName[i].checked) {
           } else {
             ckName[i].checked = false;
-            this.setState({ paidTo: [] });
+            this.setState({ paidTo: [], isSelected: true });
           }
         }
       } else {
@@ -163,7 +160,6 @@ class Compute extends Component {
   }
 
   render() {
-    console.log(this.state.paidTo);
     const payments = this.props.payment
       .split("\n")
       .slice(0, this.props.noOfPayments);
@@ -302,7 +298,6 @@ class Compute extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(ownProps);
   return {
     payment: state.payment.data,
     noOfPayments: state.payment.data.split("\n").length - 1,

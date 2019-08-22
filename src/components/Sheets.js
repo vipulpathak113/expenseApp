@@ -7,6 +7,7 @@ import { getPayments } from "../store/actions/sheetAction";
 import { getSheets } from "../store/actions/sheetAction";
 import { connect } from "react-redux";
 import DraggableModalDialog from "./Draggable";
+import store from "../store/store";
 
 class Sheets extends Component {
   constructor(props) {
@@ -26,6 +27,15 @@ class Sheets extends Component {
     });
     this.props.getSheets({ id: id });
     this.props.getPayments({ id: id });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    store.subscribe(() => {
+      const currState = store.getState();
+      const stateHasChanged = _.isEqual(currState, prevState);
+      console.log(stateHasChanged);
+      prevState = currState;
+    });
   }
 
   editSheet() {
