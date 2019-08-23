@@ -31,13 +31,24 @@ class Sheets extends Component {
 
   editSheet() {
     var data = this.props.sheets[0];
-    this.setState({
-      editModal: true,
-      display_name: data.display_name,
-      description: data.description,
-      created_date: data.created_date,
-      sid: data.id
-    });
+
+    if (data.display_name === "" && data.description === "") {
+      this.setState({
+        editModal: true,
+        display_name: "New Expense Sheet",
+        description: "New Description",
+        created_date: data.created_date,
+        sid: data.id
+      });
+    } else {
+      this.setState({
+        editModal: true,
+        display_name: data.display_name,
+        description: data.description,
+        created_date: data.created_date,
+        sid: data.id
+      });
+    }
   }
 
   handleChange = e => {
@@ -79,7 +90,14 @@ class Sheets extends Component {
                 : sheets.display_name
               : ""}
           </b>
-          <b>-{sheets ? sheets.description : ""}</b>
+          <b>
+            -
+            {sheets
+              ? sheets.description === ""
+                ? "New Description"
+                : sheets.description
+              : ""}
+          </b>
           <a onClick={this.editSheet.bind(this)} className="edit">
             <u style={{ marginLeft: "12px" }}>Edit</u>
           </a>
@@ -129,8 +147,8 @@ class Sheets extends Component {
                 type="text"
                 style={{
                   width: "280px",
-                  "margin-left": "37px",
-                  "margin-right": "6px"
+                  marginLeft: "37px",
+                  marginRight: "6px"
                 }}
                 id="display_name"
                 value={this.state.display_name}
@@ -143,8 +161,8 @@ class Sheets extends Component {
                 type="text"
                 style={{
                   width: "280px",
-                  "margin-left": "10px",
-                  "margin-top": "25px"
+                  marginLeft: "10px",
+                  marginTop: "25px"
                 }}
                 id="description"
                 value={this.state.description}
