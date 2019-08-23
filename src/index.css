@@ -378,3 +378,14 @@ table {
   margin-right: 24px;
   margin-left: 1px;
 }
+
+.default-person {
+  width: 51em;
+  word-wrap: break-word;
+  font-weight: bolder;
+}
+
+.nav-tabs .nav-link.disabled {
+  color: #6c757d;
+  background: #d3d3d3;
+}

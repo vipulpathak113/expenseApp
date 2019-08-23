@@ -29,15 +29,6 @@ class Sheets extends Component {
     this.props.getPayments({ id: id });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    store.subscribe(() => {
-      const currState = store.getState();
-      const stateHasChanged = _.isEqual(currState, prevState);
-      console.log(stateHasChanged);
-      prevState = currState;
-    });
-  }
-
   editSheet() {
     var data = this.props.sheets[0];
     this.setState({

@@ -371,10 +371,16 @@ callbackHandlerFunction = (page) => {
             <td><center>{item.name}</center></td>
             <td><center>{item.nickname}</center></td>
             <td><center>{item.comment}</center></td></tr>
-    )}):null}
+    )}): null
+      }
 </tbody>
                 </table>
-                    
+                <table style={{ 'marginTop': '15px' }} border="1">
+                <tbody>
+                <tr>
+                <td className="default-person">
+                >>Please enter the list of persons who are sharing expenses: Click <i>Add Person</i> button to get started.
+Once you have entered at least 2 persons, click <i>Enter Expenses</i> to start entering shared expenses.</td></tr></tbody></table>
                         <Button
                             variant="primary"
                             size="sm"

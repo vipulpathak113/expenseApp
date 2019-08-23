@@ -3,7 +3,8 @@ const initState = {
   personError: null,
   data: "",
   data1: "",
-  data2: ""
+  data2: "",
+  isLoading: true
 };
 
 const personReducer = (state = initState, action) => {
@@ -21,7 +22,7 @@ const personReducer = (state = initState, action) => {
         personSuccess: null
       };
     case "FETCH_PERSON":
-      return { ...state, data1: [...action.payload] };
+      return { ...state, data1: [...action.payload], isLoading: false };
 
     case "UPDATE_PERSON":
       return {
