@@ -223,7 +223,7 @@ class Compute extends Component {
                   })
                 ) : (
                   <tr className="zerobal">
-                    <td>No debt. Everything balances!</td>
+                    <td>No payment needed, everything balances!</td>
                   </tr>
                 )}
               </tbody>

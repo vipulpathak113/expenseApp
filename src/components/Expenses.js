@@ -43,7 +43,7 @@ class Expense extends Component {
         isSelected: true,
         sheetId: '',
         payment:'',
-        chckall:true,
+        chckall:false,
         selectValue:'all',
         currentPage: 1,
         selectedValue:10,
@@ -157,7 +157,7 @@ class Expense extends Component {
     }
 
     open() {
-        this.setState({ showModal: true,quant:'none' });
+        this.setState({ showModal: true,quant:'none',});
     }
 
     saveAndNew(e) {
@@ -265,12 +265,20 @@ else{
     }
 
     onToggleEdit(e) {
+        console.log(`.sel${e.target.id}`)
         const items = this.state.items
         let index
         if (e.target.checked) {
+            $(`.sel${e.target.id}`).css({
+                background: "lightsteelblue"
+              });
+
             this.setState({ isSelected: false })
             items.push(this.props.expenses[e.target.value][5])
         } else {
+            $(`.sel${e.target.id}`).css({
+                background: "lavender"
+              });
             this.setState({ isSelected: true,chckall:false })
             index = items.indexOf(+e.target.value)
             items.splice(index, 1)
@@ -324,6 +332,9 @@ else{
         if (ele.target.checked) {
             for (var i = 0; i < checkboxes.length; i++) {
                 if (checkboxes[i].type === 'checkbox'&& checkboxes[i].checked === false ) {
+                    $(`.sel${i}`).css({
+                        background: "lightsteelblue"
+                      });
                     checkboxes[i].checked = true;
                 }
             }
@@ -337,22 +348,70 @@ else{
             for (var j = 0; j < checkboxes.length; j++) {
                 if (checkboxes[j].type === 'checkbox') {
                     checkboxes[j].checked = false;
+                    $(`.sel${j}`).css({
+                        background: "lavender"
+                      });
                 }
             }
             items= []
             this.setState({
                 items:items,isSelected: true,chckall:false
             })
+            
         }
        
+    }
+
+
+    unSelectAll(){
+
+        var items= this.state.items
+        const expenses= this.props.expenses
+        if(expenses)
+        var checkboxes = document.getElementsByTagName('input');
+        if (this.state.chckall===false) {
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type === 'checkbox'&& checkboxes[i].checked === true ) {
+                    $(`.sel${i}`).css({
+                        background: "lavender"
+                      });
+                    checkboxes[i].checked = false;
+                }
+            }
+                this.setState({
+                    items:[],isSelected: true
+                })
+
+        } else {
+            for (var j = 0; j < checkboxes.length; j++) {
+                if (checkboxes[j].type === 'checkbox') {
+                    checkboxes[j].checked = false;
+                    $(`.sel${j}`).css({
+                        background: "lavender"
+                      });
+                }
+            }
+            items= []
+            this.setState({
+                items:items,isSelected: true
+            })
+        }
+
+
+
+
     }
 
     clickNext(event) {
           this.props.getAllExpenses({id:this.state.sheetId,currentPage:Number(event.target.id) + 1,selectValue:this.state.selectValue})
 
         this.setState({
-          currentPage: Number(event.target.id) + 1
+          currentPage: Number(event.target.id) + 1,
+          items:[],
+          chckall:false
         });
+
+        this.unSelectAll();
     
         if (Number(event.target.id) + 1 >= Math.ceil(this.props.count /10)) {
           this.setState({
@@ -364,15 +423,22 @@ else{
       clickPrev(event) {
         this.props.allexpense({id:this.state.sheetId,currentPage:Number(event.target.id) - 1})
         this.setState({
-          currentPage: Number(event.target.id) - 1
+          currentPage: Number(event.target.id) - 1,
+          items:[],
+          chckall:false
+
         });
+        this.unSelectAll();
       }
     
       clickLast(event) {
         this.props.getAllExpenses({id:this.state.sheetId,currentPage:Number(event.target.id),selectValue:this.state.selectValue})
         this.setState({
-          currentPage: Number(event.target.id)
+          currentPage: Number(event.target.id),
+          items:[],
+          chckall:false
         });
+        this.unSelectAll();
       }
 
       checkReqFields(){
@@ -415,6 +481,7 @@ else{
     }
     render() {
         const field = this.props.expenses?this.props.expenses:"";
+        console.log(this.state.items)
         var arr2=[]
      field && field.map(item=>{
          return arr2.push(item[2])
@@ -517,7 +584,7 @@ else{
                 <table border="1">
                     <thead>
                         <tr className="rowContent">
-                            <th><center><input type="checkbox" disabled={field?!(field.length > 1):""} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox"/>Action</center></th>
+                            <th><center><input type="checkbox" disabled={field?!(field.length > 1):""} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" checked={this.state.chckall}/>Action</center></th>
                             <th><center>Date</center></th>
                             <th><center>Description</center></th>
                             <th><center>Who Paid?</center></th>
@@ -526,9 +593,9 @@ else{
                         </tr>
                         {field? field.map((item, id) => {
                             return (
-                                <tr key={id} style={{background:item[1]==="Debt Paid"?"lightgreen":"lavender"}}>
+                                <tr key={id} id={id} style={{background:item[1]==="Debt Paid"?"lightgreen":"lavender"}} className={`sel${id}`}>
                                     <td>
-                                        <input type="checkbox" value={id} onChange={this.onToggleEdit.bind(this)} className="selectCheckboxDel" name="delchck" />
+                                        <input type="checkbox" value={id} id={id} onChange={this.onToggleEdit.bind(this)} className="selectCheckboxDel" name="delchck" />
                                         <button onClick={this.editMode.bind(this, id)}>Edit</button></td>
                                     <td><center className="dateexp">{new Date(Date.parse(item[0])).toDateString().substring(3, 18)}</center></td>
                                     <td><center>{item[1]==="Debt Paid"?<b style={{color:"green"}}>Debt Paid</b>:item[1]}</center></td>
