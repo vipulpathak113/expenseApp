@@ -265,7 +265,6 @@ else{
     }
 
     onToggleEdit(e) {
-        console.log(`.sel${e.target.id}`)
         const items = this.state.items
         let index
         if (e.target.checked) {
@@ -481,7 +480,6 @@ else{
     }
     render() {
         const field = this.props.expenses?this.props.expenses:"";
-        console.log(this.state.items)
         var arr2=[]
      field && field.map(item=>{
          return arr2.push(item[2])
