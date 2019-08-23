@@ -26,7 +26,7 @@ class Compute extends Component {
   }
 
   componentDidMount() {
-    var id = window.location.pathname.substring(7, 9);
+    var id = window.location.pathname.substring(7);
     this.setState({
       sheetId: id
     });
@@ -58,7 +58,7 @@ class Compute extends Component {
       }
     }
 
-    var id = window.location.pathname.substring(7, 9);
+    var id = window.location.pathname.substring(7);
     this.props.createExpense({
       description: this.state.description,
       date: this.state.startDate,
@@ -91,10 +91,10 @@ class Compute extends Component {
 
   unCheck() {
     var ckName = document.getElementsByName("newchck");
-    var checked = document.getElementById(this.state.value);
+    var chcked = document.getElementById(this.state.value);
 
-    if (checked) {
-      if (checked.checked) {
+    if (chcked) {
+      if (chcked) {
         for (var i = 0; i < ckName.length; i++) {
           if (!ckName[i].checked) {
           } else {
@@ -217,7 +217,9 @@ class Compute extends Component {
                             className="payerarrow"
                           />
                         </td>
-                        <td className="paymentcol">{item.split(",")[2]}</td>
+                        <td className="paymentcol" style={{ width: "26px" }}>
+                          {item.split(",")[2]}
+                        </td>
                       </tr>
                     );
                   })

@@ -21,7 +21,7 @@ class Sheets extends Component {
   }
 
   componentDidMount() {
-    var id = window.location.pathname.substring(7, 9);
+    var id = window.location.pathname.substring(7);
     this.setState({
       sheetId: id
     });

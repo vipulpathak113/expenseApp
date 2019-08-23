@@ -118,9 +118,9 @@ class Expense extends Component {
     }
 
     save(e) {
-        e.preventDefault();
+
         this.checkReqFields();
-        
+        e.preventDefault();
         if(this.checkReqFields()===true){
         this.props.createExpense({
             description: this.state.description,
@@ -295,7 +295,7 @@ else{
             selectedValue:10
         })
         } else {
-            var id = window.location.pathname.substring(7, 9)
+            var id = window.location.pathname.substring(7)
             this.props.allexpense({id:id,currentPage:1})
             this.setState({
                 selectedValue:10
@@ -307,7 +307,7 @@ else{
         this.setState({selectedValue:e.target.value});
 
         if (e.target.value === 10) {
-            var id = window.location.pathname.substring(7, 9)
+            var id = window.location.pathname.substring(7)
               this.props.allexpense({id:id,currentPage:1})
               this.setState({currentPage:1});
           } else {
@@ -449,16 +449,30 @@ else{
 		if(desc.trim()==""){
 			document.getElementById("reqTxtdesc").innerHTML="Description is required";
 			returnValue=false;
-		}
+        }
+        
+        else{
+            document.getElementById("reqTxtdesc").innerHTML="";
+			returnValue=true;   
+        }
 		if(amount.trim()==""){
 			document.getElementById("reqTxtamount").innerHTML="Amount is required";
 			returnValue=false;
+        }
+        else{
+            document.getElementById("reqTxtamount").innerHTML="";
+			returnValue=true; 
         }			
         
         if ($(".checkin:checked").length < 1) {
             
             document.getElementById("reqchckbox").innerHTML="Atleast one person should be selected";
             returnValue=false;
+        }
+
+        else{
+            document.getElementById("reqchckbox").innerHTML="";
+            returnValue=true;
         }
 
 		return returnValue;
@@ -472,7 +486,7 @@ else{
 
 
     componentDidMount() {
-        var id = window.location.pathname.substring(7, 9)
+        var id = window.location.pathname.substring(7)
         this.setState({
             sheetId: id
         })

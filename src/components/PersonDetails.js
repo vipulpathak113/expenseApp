@@ -102,7 +102,7 @@ class PersonDetails extends Component {
     }
 
     handleSelect(value) {
-        var id = window.location.pathname.substring(7, 9);
+        var id = window.location.pathname.substring(7)
         this.setState({
             key: value,
         });
@@ -258,7 +258,7 @@ class PersonDetails extends Component {
 
     componentDidMount() {
 
-        var id = window.location.pathname.substring(7, 9)
+        var id = window.location.pathname.substring(7)
         this.setState({
             sheetId: id
         })
