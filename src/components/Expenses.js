@@ -395,10 +395,6 @@ else{
                 items:items,isSelected: true
             })
         }
-
-
-
-
     }
 
     clickNext(event) {
