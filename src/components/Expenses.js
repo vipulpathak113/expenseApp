@@ -501,6 +501,7 @@ else{
     }
     render() {
         const field = this.props.expenses?this.props.expenses:"";
+        console.log(field)
         var arr2=[]
      field && field.map(item=>{
          return arr2.push(item[2])
@@ -603,7 +604,7 @@ else{
                 <table border="1">
                     <thead>
                         <tr className="rowContent">
-                            <th><center><input type="checkbox" disabled={field?!(field.length > 1):""} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" checked={this.state.chckall}/>Action</center></th>
+                            <th><center><input type="checkbox" disabled={field===""||!(field.length >= 1)} value="checkAll" onChange={this.onToggleAll.bind(this)} className="selectCheckbox" checked={this.state.chckall}/>Action</center></th>
                             <th><center>Date</center></th>
                             <th><center>Description</center></th>
                             <th><center>Who Paid?</center></th>
