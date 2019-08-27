@@ -337,6 +337,12 @@ callbackHandlerFunction = (page) => {
     })
 }
 
+callbackHandlerFunctionKey = (key) => {
+    this.setState({
+        key:key
+    })
+}
+
     render() {
 
         const persons = this.props.persons1;
@@ -418,6 +424,7 @@ Once you have entered at least 2 persons, click <i>Enter Expenses</i> to start e
                             handleSelect={this.handleSelect.bind(this)}
                             isComputeDisabled={this.state.isComputeDisabled}
                             currentPage={this.callbackHandlerFunction}
+                            keyy={this.callbackHandlerFunctionKey}
                             />
                     </Tab>
                     <Tab eventKey="payment" title="Compute Payments"

@@ -10,7 +10,7 @@ export const createSheet = sheet => {
         if (response.status === 201) {
           dispatch({ type: "CREATE_SHEET", data: response.data });
           history.push("/" + "sheet" + "/" + response.data.sheet);
-          window.location.reload();
+          // window.location.reload();
         }
       })
       .catch(err => {

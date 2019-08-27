@@ -13,6 +13,7 @@ import { fetchAll } from "../store/actions/expenseAction";
 import { connect } from 'react-redux'
 import $ from 'jquery';
 import DraggableModalDialog from './Draggable'
+import axios from 'axios'
 
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -50,6 +51,7 @@ class Expense extends Component {
         nonevensplit:'',
         quant:'',
         checkAll: false,
+        keyy:'group'
     }
 }
 
@@ -487,6 +489,15 @@ else{
             sheetId: id
         })
         this.props.allexpense({id:id,currentPage:this.state.currentPage})
+
+        axios
+            .get(`http://127.0.0.1:8000/expense/person/?pk=${id}`)
+            .then(res => {
+                if(res.data.length<2){
+                    this.props.keyy(this.state.keyy)
+                }
+            })
+
     }
     render() {
         const field = this.props.expenses?this.props.expenses:"";
