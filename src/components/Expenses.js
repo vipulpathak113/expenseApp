@@ -501,7 +501,6 @@ else{
     }
     render() {
         const field = this.props.expenses?this.props.expenses:"";
-        console.log(field)
         var arr2=[]
      field && field.map(item=>{
          return arr2.push(item[2])
@@ -676,7 +675,7 @@ else{
                             <span id="reqTxtdesc" className="reqError"></span>
                             </div>
                             <div className="divPaid"><span className="paid">Who Paid?</span>
-
+<span>
                                 {this.props.persons && this.props.persons.map((item, id) => {
                                     return (
                                         <span className="paidradio" key={id}>
@@ -689,8 +688,10 @@ else{
                                                 style={{ 'marginLeft': '9px' }} /> {item.nickname}
                                         </span>
                                     )
-                                })}
-
+                                }
+                                )}
+                                
+                                </span>
                             </div>
                             <div><span className="expamount">Amount</span> <input type="number" style={{ 'marginTop': '9px', 'marginLeft': '5px' }} id="amount" value={this.state.amount} onChange={this.handleChange.bind(this)}></input> <b><i>(Numbers only)</i></b>
                             <span id="reqTxtamount" className="reqError"></span>

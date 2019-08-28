@@ -87,6 +87,7 @@ code {
 
 .paidradio {
   padding-right: 15px;
+  display: inline-grid;
 }
 
 .datePanel {
